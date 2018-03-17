@@ -14,17 +14,13 @@ protocol PhotoSearchServiceDelegate: class {
 }
 
 protocol PhotoSearchService {
-    init(delegate: PhotoSearchServiceDelegate?)
+    var delegate: PhotoSearchServiceDelegate? {set get}
     func searchPhotos(with phrase: String, page: Int)
 }
 
 class PhotoSearchFlickrWebService: PhotoSearchService {
     weak var delegate: PhotoSearchServiceDelegate?
-    
-    required init(delegate: PhotoSearchServiceDelegate?) {
-        self.delegate = delegate
-    }
-    
+        
     func searchPhotos(with phrase: String, page: Int) {
         let photosStub = [
             RemotePhotoModel(id: "id111", farm: 1, server: "server", secret: "secret", title: "Title1"),

@@ -7,3 +7,22 @@
 //
 
 import Foundation
+
+protocol PhotoViewerPresenter {
+    
+}
+
+class PhotoViewerPresenterImpl {
+    var interactor: PhotoViewerInteractor?
+    weak var view: PhotoViewerView?
+    
+    
+}
+
+extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
+    
+}
+
+extension PhotoViewerPresenterImpl: PhotoViewerInteractorDelegate {
+    
+}
