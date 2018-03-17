@@ -34,18 +34,18 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="uQr-ob-HQU">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="uQr-ob-HQU" customClass="PhotoCell" customModule="FlickrPhotoViewer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="150"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="120" height="150"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VeO-7S-ka7" userLabel="Photo">
-                                                    <rect key="frame" x="16" y="10" width="84" height="107"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="VeO-7S-ka7" userLabel="Photo">
+                                                    <rect key="frame" x="8" y="8" width="104" height="111"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Vk-WF-QTS" userLabel="Title">
-                                                    <rect key="frame" x="16" y="119" width="84" height="21"/>
+                                                    <rect key="frame" x="8" y="121" width="104" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -53,14 +53,20 @@
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstAttribute="bottomMargin" secondItem="1Vk-WF-QTS" secondAttribute="bottom" constant="2" id="B5r-e2-9Xe"/>
+                                            <constraint firstItem="1Vk-WF-QTS" firstAttribute="leading" secondItem="uQr-ob-HQU" secondAttribute="leadingMargin" id="6s0-Fo-RpV"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="1Vk-WF-QTS" secondAttribute="bottom" id="B5r-e2-9Xe"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="1Vk-WF-QTS" secondAttribute="trailing" id="Fu8-is-m5x"/>
                                             <constraint firstItem="1Vk-WF-QTS" firstAttribute="top" secondItem="VeO-7S-ka7" secondAttribute="bottom" constant="2" id="HV5-uT-icL"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="VeO-7S-ka7" secondAttribute="trailing" constant="8" id="HX9-J6-bc4"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="1Vk-WF-QTS" secondAttribute="trailing" constant="8" id="jeZ-eI-gDC"/>
-                                            <constraint firstItem="VeO-7S-ka7" firstAttribute="leading" secondItem="uQr-ob-HQU" secondAttribute="leadingMargin" constant="8" id="r8U-fK-yw3"/>
-                                            <constraint firstItem="1Vk-WF-QTS" firstAttribute="leading" secondItem="uQr-ob-HQU" secondAttribute="leadingMargin" constant="8" id="sUc-Mb-sA4"/>
-                                            <constraint firstItem="VeO-7S-ka7" firstAttribute="top" secondItem="uQr-ob-HQU" secondAttribute="topMargin" constant="2" id="vDP-Bh-1dq"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="VeO-7S-ka7" secondAttribute="trailing" id="HX9-J6-bc4"/>
+                                            <constraint firstItem="1Vk-WF-QTS" firstAttribute="leading" secondItem="uQr-ob-HQU" secondAttribute="leadingMargin" id="Ouf-IA-IEm"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="1Vk-WF-QTS" secondAttribute="trailing" id="eG9-2W-T2v"/>
+                                            <constraint firstItem="VeO-7S-ka7" firstAttribute="leading" secondItem="uQr-ob-HQU" secondAttribute="leadingMargin" id="r8U-fK-yw3"/>
+                                            <constraint firstItem="VeO-7S-ka7" firstAttribute="top" secondItem="uQr-ob-HQU" secondAttribute="topMargin" id="vDP-Bh-1dq"/>
                                         </constraints>
+                                        <connections>
+                                            <outlet property="photo" destination="VeO-7S-ka7" id="jfO-RL-wJS"/>
+                                            <outlet property="title" destination="1Vk-WF-QTS" id="1gT-lI-kYW"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -76,10 +82,16 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="photoCollectionView" destination="SU5-D0-rhN" id="FTo-dK-cSn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="32.799999999999997" y="31.934032983508249"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="placeholder" width="206" height="206"/>
+    </resources>
 </document>
