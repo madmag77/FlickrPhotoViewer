@@ -17,6 +17,8 @@
 		EB1C2696205CDD44003AC2A3 /* PhotoViewerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C2695205CDD44003AC2A3 /* PhotoViewerBuilder.swift */; };
 		EB1C2698205CDD5C003AC2A3 /* PhotoViewerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C2697205CDD5C003AC2A3 /* PhotoViewerInteractor.swift */; };
 		EB1C269C205CE471003AC2A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB1C269A205CE471003AC2A3 /* Localizable.strings */; };
+		EB1C26A0205CEA59003AC2A3 /* PhotoSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */; };
+		EB1C26A3205CEB06003AC2A3 /* RemotePhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A2205CEB06003AC2A3 /* RemotePhotoModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		EB1C2695205CDD44003AC2A3 /* PhotoViewerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerBuilder.swift; sourceTree = "<group>"; };
 		EB1C2697205CDD5C003AC2A3 /* PhotoViewerInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerInteractor.swift; sourceTree = "<group>"; };
 		EB1C269B205CE471003AC2A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSearchService.swift; sourceTree = "<group>"; };
+		EB1C26A2205CEB06003AC2A3 /* RemotePhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePhotoModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +109,8 @@
 		EB1C268F205CDC9A003AC2A3 /* PhotoViewerModule */ = {
 			isa = PBXGroup;
 			children = (
+				EB1C26A1205CEAD3003AC2A3 /* Models */,
+				EB1C269E205CEA1C003AC2A3 /* Services */,
 				EB1C2691205CDD0B003AC2A3 /* PhotoViewerView.swift */,
 				EB1C2693205CDD1C003AC2A3 /* PhotoViewerPresenter.swift */,
 				EB1C2695205CDD44003AC2A3 /* PhotoViewerBuilder.swift */,
@@ -122,6 +128,22 @@
 				EB1C269A205CE471003AC2A3 /* Localizable.strings */,
 			);
 			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		EB1C269E205CEA1C003AC2A3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		EB1C26A1205CEAD3003AC2A3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EB1C26A2205CEB06003AC2A3 /* RemotePhotoModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,8 +252,10 @@
 			files = (
 				EB1C2694205CDD1C003AC2A3 /* PhotoViewerPresenter.swift in Sources */,
 				EB1C2670205CDBF6003AC2A3 /* AppDelegate.swift in Sources */,
+				EB1C26A3205CEB06003AC2A3 /* RemotePhotoModel.swift in Sources */,
 				EB1C2696205CDD44003AC2A3 /* PhotoViewerBuilder.swift in Sources */,
 				EB1C2698205CDD5C003AC2A3 /* PhotoViewerInteractor.swift in Sources */,
+				EB1C26A0205CEA59003AC2A3 /* PhotoSearchService.swift in Sources */,
 				EB1C2692205CDD0B003AC2A3 /* PhotoViewerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
