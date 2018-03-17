@@ -8,8 +8,18 @@
 
 import UIKit
 
-class PhotoViewerView: UIViewController {
+protocol PhotoViewerView: class {
+    
+}
+
+class PhotoViewerViewController: UIViewController {
+    var output: PhotoViewerPresenter?
+
     override func viewDidLoad() {
         navigationItem.title = NSLocalizedString("PhotoView.Title", comment: "")
     }
+}
+
+extension PhotoViewerViewController: PhotoViewerView {
+    
 }
