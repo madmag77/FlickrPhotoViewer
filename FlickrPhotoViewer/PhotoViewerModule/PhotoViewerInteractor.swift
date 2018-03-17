@@ -9,7 +9,7 @@
 import Foundation
 
 protocol PhotoViewerInteractorDelegate: class {
-    
+    func errorOccured(_ error: Error)
 }
 
 protocol PhotoViewerInteractor {
@@ -19,7 +19,8 @@ protocol PhotoViewerInteractor {
 class PhotoViewerInteractorImpl: PhotoViewerInteractor {
     weak var delegate: PhotoViewerInteractorDelegate?
     var photoSearchService: PhotoSearchService?
-    
+    weak var dataStore: PhotoViewerDataStoreWriter?
+
     init(photoSearchService: PhotoSearchService?) {
         self.photoSearchService = photoSearchService
         self.photoSearchService?.delegate = self
@@ -34,11 +35,11 @@ class PhotoViewerInteractorImpl: PhotoViewerInteractor {
 extension PhotoViewerInteractorImpl: PhotoSearchServiceDelegate {
     
     func photosFound(_ photos: [RemotePhotoModel]) {
-        
+        dataStore?.addModels(photos)
     }
     
     func errorOccured(_ error: Error) {
-        
+        delegate?.errorOccured(error)
     }
     
 }
