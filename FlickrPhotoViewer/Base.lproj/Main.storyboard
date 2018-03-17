@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,17 +24,62 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SU5-D0-rhN" userLabel="Photos Collection View">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="zSG-TO-bR0">
+                                    <size key="itemSize" width="120" height="150"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoCell" id="uQr-ob-HQU">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="150"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="120" height="150"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VeO-7S-ka7" userLabel="Photo">
+                                                    <rect key="frame" x="16" y="10" width="84" height="107"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Vk-WF-QTS" userLabel="Title">
+                                                    <rect key="frame" x="16" y="119" width="84" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottomMargin" secondItem="1Vk-WF-QTS" secondAttribute="bottom" constant="2" id="B5r-e2-9Xe"/>
+                                            <constraint firstItem="1Vk-WF-QTS" firstAttribute="top" secondItem="VeO-7S-ka7" secondAttribute="bottom" constant="2" id="HV5-uT-icL"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="VeO-7S-ka7" secondAttribute="trailing" constant="8" id="HX9-J6-bc4"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="1Vk-WF-QTS" secondAttribute="trailing" constant="8" id="jeZ-eI-gDC"/>
+                                            <constraint firstItem="VeO-7S-ka7" firstAttribute="leading" secondItem="uQr-ob-HQU" secondAttribute="leadingMargin" constant="8" id="r8U-fK-yw3"/>
+                                            <constraint firstItem="1Vk-WF-QTS" firstAttribute="leading" secondItem="uQr-ob-HQU" secondAttribute="leadingMargin" constant="8" id="sUc-Mb-sA4"/>
+                                            <constraint firstItem="VeO-7S-ka7" firstAttribute="top" secondItem="uQr-ob-HQU" secondAttribute="topMargin" constant="2" id="vDP-Bh-1dq"/>
+                                        </constraints>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="hNa-3m-3q1" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="8O1-D5-HNT"/>
+                            <constraint firstItem="SU5-D0-rhN" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="BfG-a6-zsm"/>
                             <constraint firstItem="hNa-3m-3q1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="FRv-Ys-0fi"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="SU5-D0-rhN" secondAttribute="bottom" id="ap8-0o-nef"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="SU5-D0-rhN" secondAttribute="trailing" id="lAo-yS-HjQ"/>
+                            <constraint firstItem="SU5-D0-rhN" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="vdW-eR-sny"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="32.799999999999997" y="31.934032983508249"/>
         </scene>
     </scenes>
 </document>
