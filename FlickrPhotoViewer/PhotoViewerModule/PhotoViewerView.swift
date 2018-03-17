@@ -10,6 +10,6 @@ import UIKit
 
 class PhotoViewerView: UIViewController {
     override func viewDidLoad() {
-        navigationItem.title = NSLocalizedString("PhotoViewTitle", comment: "")
+        navigationItem.title = NSLocalizedString("PhotoView.Title", comment: "")
     }
 }
