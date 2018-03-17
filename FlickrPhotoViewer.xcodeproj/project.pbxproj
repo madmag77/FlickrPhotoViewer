@@ -16,6 +16,7 @@
 		EB1C2694205CDD1C003AC2A3 /* PhotoViewerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C2693205CDD1C003AC2A3 /* PhotoViewerPresenter.swift */; };
 		EB1C2696205CDD44003AC2A3 /* PhotoViewerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C2695205CDD44003AC2A3 /* PhotoViewerBuilder.swift */; };
 		EB1C2698205CDD5C003AC2A3 /* PhotoViewerInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C2697205CDD5C003AC2A3 /* PhotoViewerInteractor.swift */; };
+		EB1C269C205CE471003AC2A3 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB1C269A205CE471003AC2A3 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		EB1C2693205CDD1C003AC2A3 /* PhotoViewerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerPresenter.swift; sourceTree = "<group>"; };
 		EB1C2695205CDD44003AC2A3 /* PhotoViewerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerBuilder.swift; sourceTree = "<group>"; };
 		EB1C2697205CDD5C003AC2A3 /* PhotoViewerInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerInteractor.swift; sourceTree = "<group>"; };
+		EB1C269B205CE471003AC2A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 				EB1C2678205CDBF6003AC2A3 /* LaunchScreen.storyboard */,
 				EB1C2676205CDBF6003AC2A3 /* Assets.xcassets */,
 				EB1C267B205CDBF6003AC2A3 /* Info.plist */,
+				EB1C269A205CE471003AC2A3 /* Localizable.strings */,
 			);
 			name = SupportingFiles;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB1C267A205CDBF6003AC2A3 /* LaunchScreen.storyboard in Resources */,
+				EB1C269C205CE471003AC2A3 /* Localizable.strings in Resources */,
 				EB1C2677205CDBF6003AC2A3 /* Assets.xcassets in Resources */,
 				EB1C2675205CDBF6003AC2A3 /* Main.storyboard in Resources */,
 			);
@@ -265,6 +269,14 @@
 				EB1C2679205CDBF6003AC2A3 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		EB1C269A205CE471003AC2A3 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EB1C269B205CE471003AC2A3 /* Base */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
