@@ -13,7 +13,7 @@ protocol SearchStringHandlerDelegate: class {
 }
 
 protocol SearchStringHandler {
-    var searchString: String {get}
+    var searchString: String? {get}
     func stringChanged(to string: String)
 }
 
@@ -21,7 +21,7 @@ class SearchStringDelayedHandler: SearchStringHandler {
     
     weak var delegate: SearchStringHandlerDelegate?
     private let delayInFractionOfSeconds: Double
-    var searchString = ""
+    var searchString: String? = nil
     private var timer = Timer()
     
     init(delayInMs: Int) {
@@ -37,7 +37,7 @@ class SearchStringDelayedHandler: SearchStringHandler {
         timer = Timer.scheduledTimer(withTimeInterval: delayInFractionOfSeconds,
                       repeats: false,
                       block: { _ in
-                 self.delegate?.canSearchString(self.searchString)
+                 self.delegate?.canSearchString(self.searchString!)
         })
             
         

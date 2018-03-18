@@ -10,6 +10,7 @@ import UIKit
 
 protocol PhotoViewerView: class {
     func updatePhotosView()
+    func updatePhoto(with index: Int)
 }
 
 fileprivate struct CollectionViewUISetup {
@@ -51,6 +52,11 @@ class PhotoViewerViewController: UIViewController {
 extension PhotoViewerViewController: PhotoViewerView {
     func updatePhotosView() {
         photoCollectionView.reloadData()
+    }
+    
+    func updatePhoto(with index: Int) {
+        guard index < photoCollectionView.numberOfItems(inSection: 0) else { return }
+        photoCollectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
 }
 

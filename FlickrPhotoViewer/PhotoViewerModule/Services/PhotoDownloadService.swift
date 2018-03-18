@@ -55,7 +55,12 @@ class PhotoDownloadFlickrWebService: PhotoDownloadService {
                     return
             }
             
-            self.imageCache[model.id] = UIImage(data: data)
+            guard let image = UIImage(data: data) else {
+                // TODO think how log errors and show to user
+                return
+            }
+            
+            self.putImageToCache(for: model.id, image: image)
             
         }.resume()
         

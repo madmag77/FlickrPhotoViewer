@@ -75,6 +75,10 @@ extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
     func requestPage(with number: Int) {
         interactor?.photoSearch(with: searchStringHandler?.searchString ?? startAppSearchSstring, page: number)
     }
+    
+    func photoDownloaded(for index: Int) {
+        view?.updatePhoto(with: index)
+    }
 }
 
 extension PhotoViewerPresenterImpl: SearchStringHandlerDelegate {

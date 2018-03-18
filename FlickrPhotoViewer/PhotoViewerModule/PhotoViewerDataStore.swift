@@ -21,6 +21,7 @@ protocol PhotoViewerDataStoreWriter: class {
 protocol PhotoViewerDataStoreDelegate: class {
     func dataWasChanged()
     func requestPage(with number: Int)
+    func photoDownloaded(for index: Int)
 }
 
 class PhotoViewerDataStore {
@@ -28,6 +29,7 @@ class PhotoViewerDataStore {
     private var requestedPage = 1
     
     private var photoModels: [RemotePhotoModel] = []
+    private var mapIdToIndex: [String: Int] = [:]
     
     var photoDownloadService: PhotoDownloadService?
     weak var delegate: PhotoViewerDataStoreDelegate?
@@ -41,6 +43,14 @@ class PhotoViewerDataStore {
             DispatchQueue.global().async {
                 self.delegate?.requestPage(with: pageToRequest)
             }
+        }
+    }
+    
+    private func addIdToIndex(from models: [RemotePhotoModel]) {
+        var index = photoModels.count - models.count
+        for model in models {
+            defer {index += 1}
+            mapIdToIndex[model.id] = index
         }
     }
 }
@@ -63,11 +73,13 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreWriter {
     func clearAll() {
         requestedPage = 1
         photoModels = []
+        mapIdToIndex = [:]
         delegate?.dataWasChanged()
     }
     
     func addModels(_ models: [RemotePhotoModel]) {
         photoModels += models
+        addIdToIndex(from: models)
         delegate?.dataWasChanged()
     }
 
@@ -75,7 +87,8 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreWriter {
 
 extension PhotoViewerDataStore: PhotoDownloadServiceDelegate {
     func justDownloadedImage(for id: String) {
-        
+        guard let index = mapIdToIndex[id] else { return }
+        delegate?.photoDownloaded(for: index)
     }
     
 }
