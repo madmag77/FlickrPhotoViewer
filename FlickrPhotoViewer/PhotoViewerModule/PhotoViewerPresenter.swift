@@ -41,12 +41,16 @@ extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
     }
     
     func configureItem(_ item: PhotoCellItem, with indexPath: IndexPath) {
-       guard let dataStore = dataStore,
-        let title = dataStore.item(for: indexPath.row).title else {
-            return
+        guard let dataStore = dataStore else { return }
+        let (title, image) = dataStore.item(for: indexPath.row)
+        if let title = title {
+            item.setTitle(title)
         }
         
-        item.setTitle(title)
+        if let image = image {
+            item.setPhoto(image)
+        }
+
     }
     
     func changeSearchString(to string: String) {

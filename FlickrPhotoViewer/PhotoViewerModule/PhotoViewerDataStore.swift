@@ -28,6 +28,8 @@ class PhotoViewerDataStore {
     private var requestedPage = 1
     
     private var photoModels: [RemotePhotoModel] = []
+    
+    var photoDownloadService: PhotoDownloadService?
     weak var delegate: PhotoViewerDataStoreDelegate?
     
     private func checkPaging(with index: Int) {
@@ -52,8 +54,8 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreReader {
         guard index < photoModels.count else { return (nil, nil) }
         
         checkPaging(with: index)
-        
-        return (photoModels[index].title, nil)
+        let image = photoDownloadService?.getPhoto(for: photoModels[index])
+        return (photoModels[index].title, image)
     }
 }
 
@@ -69,4 +71,11 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreWriter {
         delegate?.dataWasChanged()
     }
 
+}
+
+extension PhotoViewerDataStore: PhotoDownloadServiceDelegate {
+    func justDownloadedImage(for id: String) {
+        
+    }
+    
 }

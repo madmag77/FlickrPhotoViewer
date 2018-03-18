@@ -23,6 +23,7 @@
 		EB1C26A8205D08AF003AC2A3 /* PhotoViewerDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */; };
 		EB1C26AA205DF384003AC2A3 /* URLFabric.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A9205DF384003AC2A3 /* URLFabric.swift */; };
 		EB1C26AC205E08BB003AC2A3 /* SearchStringHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26AB205E08BB003AC2A3 /* SearchStringHandler.swift */; };
+		EB1C26AE205E1761003AC2A3 /* PhotoDownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26AD205E1761003AC2A3 /* PhotoDownloadService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerDataStore.swift; sourceTree = "<group>"; };
 		EB1C26A9205DF384003AC2A3 /* URLFabric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLFabric.swift; sourceTree = "<group>"; };
 		EB1C26AB205E08BB003AC2A3 /* SearchStringHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStringHandler.swift; sourceTree = "<group>"; };
+		EB1C26AD205E1761003AC2A3 /* PhotoDownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDownloadService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,8 +146,9 @@
 		EB1C269E205CEA1C003AC2A3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */,
 				EB1C26A9205DF384003AC2A3 /* URLFabric.swift */,
+				EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */,
+				EB1C26AD205E1761003AC2A3 /* PhotoDownloadService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 				EB1C26AA205DF384003AC2A3 /* URLFabric.swift in Sources */,
 				EB1C2696205CDD44003AC2A3 /* PhotoViewerBuilder.swift in Sources */,
 				EB1C26A5205CF817003AC2A3 /* PhotoCell.swift in Sources */,
+				EB1C26AE205E1761003AC2A3 /* PhotoDownloadService.swift in Sources */,
 				EB1C2698205CDD5C003AC2A3 /* PhotoViewerInteractor.swift in Sources */,
 				EB1C26A0205CEA59003AC2A3 /* PhotoSearchService.swift in Sources */,
 				EB1C2692205CDD0B003AC2A3 /* PhotoViewerView.swift in Sources */,
