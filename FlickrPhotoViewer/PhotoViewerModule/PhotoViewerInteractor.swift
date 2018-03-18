@@ -28,6 +28,7 @@ class PhotoViewerInteractorImpl: PhotoViewerInteractor {
     }
     
     func photoSearch(with phrase: String) {
+        dataStore?.clearAll()
         photoSearchService?.searchPhotos(with: phrase, page: 1)
     }
 

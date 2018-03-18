@@ -35,7 +35,6 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
     private let urlSession = URLSession.shared
     private let urlFabric: UrlFabric
     private var photoSearchTask: URLSessionDataTask?
-    private let emptySearchStringStub = "unsorted"
     
     init(urlFabric: UrlFabric) {
         self.urlFabric = urlFabric
@@ -47,8 +46,7 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
         // where all this magic with parameters and serialization/deserialization should happen
         // hopfully with usage of special libraries (e.g. Alamofire + json modeling)
         
-        let phraseToSearch = phrase.isEmpty ? emptySearchStringStub : phrase
-        guard let urlWithPhrase = URL(string: urlFabric.url.absoluteString + "&text=" + phraseToSearch + "&page=" + String(page)) else {
+        guard let urlWithPhrase = URL(string: urlFabric.url.absoluteString + "&text=" + phrase + "&page=" + String(page)) else {
             self.delegate?.errorOccured(SearchInputError())
             return
         }

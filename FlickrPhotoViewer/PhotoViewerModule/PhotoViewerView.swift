@@ -36,7 +36,14 @@ class PhotoViewerViewController: UIViewController {
         navigationItem.title = NSLocalizedString("PhotoView.Title", comment: "")
         photoCollectionView.dataSource = self
         photoCollectionView.delegate = self
-        
+        let search = UISearchController(searchResultsController: nil)
+        search.searchResultsUpdater = self
+        search.obscuresBackgroundDuringPresentation = false
+        search.searchBar.placeholder = "Search for kittens"
+        self.navigationItem.searchController = search
+        self.navigationItem.hidesSearchBarWhenScrolling = true
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+
         output?.viewDidLoad()
     }
 }
@@ -44,6 +51,16 @@ class PhotoViewerViewController: UIViewController {
 extension PhotoViewerViewController: PhotoViewerView {
     func updatePhotosView() {
         photoCollectionView.reloadData()
+    }
+}
+
+extension PhotoViewerViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        guard searchController.isActive else {
+            return
+        }
+        
+        output?.changeSearchString(to: searchController.searchBar.text ?? "")
     }
 }
 

@@ -22,6 +22,7 @@
 		EB1C26A5205CF817003AC2A3 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A4205CF817003AC2A3 /* PhotoCell.swift */; };
 		EB1C26A8205D08AF003AC2A3 /* PhotoViewerDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */; };
 		EB1C26AA205DF384003AC2A3 /* URLFabric.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A9205DF384003AC2A3 /* URLFabric.swift */; };
+		EB1C26AC205E08BB003AC2A3 /* SearchStringHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26AB205E08BB003AC2A3 /* SearchStringHandler.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		EB1C26A4205CF817003AC2A3 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerDataStore.swift; sourceTree = "<group>"; };
 		EB1C26A9205DF384003AC2A3 /* URLFabric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLFabric.swift; sourceTree = "<group>"; };
+		EB1C26AB205E08BB003AC2A3 /* SearchStringHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStringHandler.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 				EB1C2695205CDD44003AC2A3 /* PhotoViewerBuilder.swift */,
 				EB1C2697205CDD5C003AC2A3 /* PhotoViewerInteractor.swift */,
 				EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */,
+				EB1C26AB205E08BB003AC2A3 /* SearchStringHandler.swift */,
 			);
 			path = PhotoViewerModule;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB1C2694205CDD1C003AC2A3 /* PhotoViewerPresenter.swift in Sources */,
+				EB1C26AC205E08BB003AC2A3 /* SearchStringHandler.swift in Sources */,
 				EB1C26A8205D08AF003AC2A3 /* PhotoViewerDataStore.swift in Sources */,
 				EB1C2670205CDBF6003AC2A3 /* AppDelegate.swift in Sources */,
 				EB1C26A3205CEB06003AC2A3 /* RemotePhotoModel.swift in Sources */,

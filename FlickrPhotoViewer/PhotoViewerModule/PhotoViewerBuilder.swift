@@ -19,11 +19,14 @@ struct PhotoViewerBuilder {
         let photoSearchService = PhotoSearchFlickrWebService(urlFabric: FlickrUrlFabric())
         let interactor = PhotoViewerInteractorImpl(photoSearchService: photoSearchService)
         
+        let searchStringHandler = SearchStringDelayedHandler(delayInMs: 500)
         let presenter = PhotoViewerPresenterImpl()
         presenter.view = view
         presenter.interactor = interactor
         presenter.dataStore = dataSource
         dataSource.delegate = presenter
+        presenter.searchStringHandler = searchStringHandler
+        searchStringHandler.delegate = presenter
         
         view.output = presenter
         interactor.delegate = presenter

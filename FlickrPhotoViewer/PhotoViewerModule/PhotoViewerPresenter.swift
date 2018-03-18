@@ -16,6 +16,7 @@ protocol PhotoViewerPresenter {
     func viewDidLoad()
     func itemsCount() -> Int
     func configureItem(_ item: PhotoCellItem, with indexPath: IndexPath)
+    func changeSearchString(to string: String)
 }
 
 class PhotoViewerPresenterImpl {
@@ -23,11 +24,16 @@ class PhotoViewerPresenterImpl {
     weak var view: PhotoViewerView?
     var dataStore: PhotoViewerDataStoreReader?
     var popupDisplay: PopupDisplay?
+    var searchStringHandler: SearchStringHandler?
+    
+    private let startAppSearchSstring = "unsorted"
 }
 
 extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
     func viewDidLoad() {
-        interactor?.photoSearch(with: "")
+        // Just to show something at first start
+        // change to another API call e.g. method.recent 
+        interactor?.photoSearch(with: startAppSearchSstring)
     }
     
     func itemsCount() -> Int {
@@ -42,6 +48,11 @@ extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
         
         item.setTitle(title)
     }
+    
+    func changeSearchString(to string: String) {
+        searchStringHandler?.stringChanged(to: string)
+    }
+
 }
 
 extension PhotoViewerPresenterImpl: PhotoViewerInteractorDelegate {
@@ -58,6 +69,14 @@ extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
     }
     
     func requestPage(with number: Int) {
-        interactor?.photoSearch(with: "", page: number)
+        interactor?.photoSearch(with: searchStringHandler?.searchString ?? startAppSearchSstring, page: number)
     }
+}
+
+extension PhotoViewerPresenterImpl: SearchStringHandlerDelegate {
+    func canSearchString(_ string: String) {
+         interactor?.photoSearch(with: string)
+    }
+    
+    
 }
