@@ -9,12 +9,15 @@
 import Foundation
 
 class ServerError: Error {
+    var localizedDescription = "Server returns error"
 }
 
 class SearchInputError: Error {
+    var localizedDescription = "Search string is invalid"
 }
 
 class ParseError: Error {
+    var localizedDescription = "Search returns unreadable data"
 }
 
 protocol PhotoSearchServiceDelegate: class {
@@ -45,7 +48,7 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
         // hopfully with usage of special libraries (e.g. Alamofire + json modeling)
         
         let phraseToSearch = phrase.isEmpty ? emptySearchStringStub : phrase
-        guard let urlWithPhrase = URL(string: urlFabric.url.absoluteString + "&text=" + phraseToSearch) else {
+        guard let urlWithPhrase = URL(string: urlFabric.url.absoluteString + "&text=" + phraseToSearch + "&page=" + String(page)) else {
             self.delegate?.errorOccured(SearchInputError())
             return
         }
@@ -84,8 +87,11 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
             }
             
             self.delegate?.photosFound(photoModels)
+            
         }
+        
         photoSearchTask?.resume()
+        
     }
     
     func deserializePhotosInfo(_ photos:  [NSDictionary]) -> [RemotePhotoModel]? {

@@ -20,11 +20,25 @@ protocol PhotoViewerDataStoreWriter: class {
 
 protocol PhotoViewerDataStoreDelegate: class {
     func dataWasChanged()
+    func requestPage(with number: Int)
 }
 
 class PhotoViewerDataStore {
-    var photoModels: [RemotePhotoModel] = []
+    private let photosPerPage = 100
+    private var requestedPage = 1
+    
+    private var photoModels: [RemotePhotoModel] = []
     weak var delegate: PhotoViewerDataStoreDelegate?
+    
+    private func checkPaging(with index: Int) {
+        guard index >= photoModels.count - photosPerPage / 2 else { return }
+        
+        let pageToRequest = Int(ceil(Double(photoModels.count) / Double(photosPerPage) + 1.0))
+        if pageToRequest > requestedPage {
+            requestedPage = pageToRequest
+            delegate?.requestPage(with: requestedPage)
+        }
+    }
 }
 
 extension PhotoViewerDataStore: PhotoViewerDataStoreReader {
@@ -34,6 +48,8 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreReader {
     
     func item(for index: Int) -> (title: String?, image: UIImage?) {
         guard index < photoModels.count else { return (nil, nil) }
+        
+        checkPaging(with: index)
         
         return (photoModels[index].title, nil)
     }

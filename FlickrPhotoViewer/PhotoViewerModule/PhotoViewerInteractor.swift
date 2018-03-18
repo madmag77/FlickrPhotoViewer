@@ -14,6 +14,7 @@ protocol PhotoViewerInteractorDelegate: class {
 
 protocol PhotoViewerInteractor {
     func photoSearch(with phrase: String)
+    func photoSearch(with phrase: String, page: Int)
 }
 
 class PhotoViewerInteractorImpl: PhotoViewerInteractor {
@@ -29,7 +30,11 @@ class PhotoViewerInteractorImpl: PhotoViewerInteractor {
     func photoSearch(with phrase: String) {
         photoSearchService?.searchPhotos(with: phrase, page: 1)
     }
-    
+
+    func photoSearch(with phrase: String, page: Int) {
+        photoSearchService?.searchPhotos(with: phrase, page: page)
+    }
+
 }
 
 extension PhotoViewerInteractorImpl: PhotoSearchServiceDelegate {

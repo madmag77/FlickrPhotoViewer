@@ -23,7 +23,6 @@ class PhotoViewerPresenterImpl {
     weak var view: PhotoViewerView?
     var dataStore: PhotoViewerDataStoreReader?
     var popupDisplay: PopupDisplay?
-    
 }
 
 extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
@@ -58,4 +57,7 @@ extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
         }
     }
     
+    func requestPage(with number: Int) {
+        interactor?.photoSearch(with: "", page: number)
+    }
 }
