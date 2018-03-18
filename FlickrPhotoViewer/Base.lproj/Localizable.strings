@@ -7,3 +7,5 @@
 */
 
 "PhotoView.Title" = "Photos";
+"PhotoView.Loading" = "Loading";
+"PhotoView.Error" = "Error";

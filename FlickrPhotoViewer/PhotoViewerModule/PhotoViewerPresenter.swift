@@ -8,10 +8,6 @@
 
 import Foundation
 
-protocol PopupDisplay {
-    func showPopup(with message: String)
-}
-
 protocol PhotoViewerPresenter {
     func viewDidLoad()
     func itemsCount() -> Int
@@ -23,17 +19,24 @@ class PhotoViewerPresenterImpl {
     var interactor: PhotoViewerInteractor?
     weak var view: PhotoViewerView?
     var dataStore: PhotoViewerDataStoreReader?
-    var popupDisplay: PopupDisplay?
     var searchStringHandler: SearchStringHandler?
     
-    private let startAppSearchSstring = "unsorted"
+    private let startAppSearchString = "unsorted"
+    
+    private func fetchData(page: Int = 1) {
+        DispatchQueue.main.async {
+            self.view?.showLoadingState()
+        }
+        let searchString = searchStringHandler?.searchString ?? startAppSearchString
+        interactor?.photoSearch(with: searchString, page: page)
+    }
 }
 
 extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
     func viewDidLoad() {
         // Just to show something at first start
-        // change to another API call e.g. method.recent
-        interactor?.photoSearch(with: startAppSearchSstring)
+        // TODO: change to another API call e.g. method.recent
+        self.fetchData()
     }
     
     func itemsCount() -> Int {
@@ -61,19 +64,27 @@ extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
 
 extension PhotoViewerPresenterImpl: PhotoViewerInteractorDelegate {
     func errorOccured(_ error: Error) {
-        popupDisplay?.showPopup(with: error.localizedDescription)
+        DispatchQueue.main.async {
+            self.view?.showError(with: error.localizedDescription)            
+        }
+    }
+    
+    func dataLoaded() {
+        DispatchQueue.main.async {
+            self.view?.showLoadedState()
+        }
     }
 }
 
 extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
     func dataWasChanged() {
-        DispatchQueue.main.async {
+         DispatchQueue.main.async {
             self.view?.updatePhotosView()
         }
     }
     
     func requestPage(with number: Int) {
-        interactor?.photoSearch(with: searchStringHandler?.searchString ?? startAppSearchSstring, page: number)
+        fetchData(page: number)
     }
     
     func photoDownloaded(for index: Int) {
@@ -83,7 +94,7 @@ extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
 
 extension PhotoViewerPresenterImpl: SearchStringHandlerDelegate {
     func canSearchString(_ string: String) {
-         interactor?.photoSearch(with: string)
+        fetchData()
     }
     
 }

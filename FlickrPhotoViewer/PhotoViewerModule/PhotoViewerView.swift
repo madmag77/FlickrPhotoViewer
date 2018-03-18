@@ -11,6 +11,9 @@ import UIKit
 protocol PhotoViewerView: class {
     func updatePhotosView()
     func updatePhoto(with index: Int)
+    func showLoadingState()
+    func showLoadedState()
+    func showError(with string: String)
 }
 
 fileprivate struct CollectionViewUISetup {
@@ -31,8 +34,14 @@ class PhotoViewerViewController: UIViewController {
 
     @IBOutlet weak var photoCollectionView: UICollectionView!
     
-    let reuseIdentifierForPhotoCell = "PhotoCell"
+    @IBOutlet weak var loadingLabel: UILabel!
+    @IBOutlet weak var heightOfLabel: NSLayoutConstraint!
+    private let loadingLabelHeight: CGFloat = 21
     
+    private let reuseIdentifierForPhotoCell = "PhotoCell"
+    private let messagesAnimationDelay = 0.3
+    private let errorMessageOnScreenDelay = 5.0
+
     override func viewDidLoad() {
         navigationItem.title = NSLocalizedString("PhotoView.Title", comment: "")
         photoCollectionView.dataSource = self
@@ -44,7 +53,8 @@ class PhotoViewerViewController: UIViewController {
         self.navigationItem.searchController = search
         self.navigationItem.hidesSearchBarWhenScrolling = true
         self.navigationController?.navigationBar.prefersLargeTitles = true
-
+        self.heightOfLabel.constant = 0
+        
         output?.viewDidLoad()
     }
 }
@@ -56,7 +66,46 @@ extension PhotoViewerViewController: PhotoViewerView {
     
     func updatePhoto(with index: Int) {
         guard index < photoCollectionView.numberOfItems(inSection: 0) else { return }
-        photoCollectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+        
+        // This tricky construction is made in order to optimise collectionView updates
+        // if number of visible items is not big - this code should work fast
+        let visiblePaths = photoCollectionView.indexPathsForVisibleItems
+        for path in visiblePaths {
+            if path.row == index {
+                photoCollectionView.reloadItems(at: [path])
+            }
+        }
+    }
+    
+    func showLoadingState() {
+        loadingLabel.text = NSLocalizedString("PhotoView.Loading", comment: "")
+        self.heightOfLabel.constant = loadingLabelHeight
+
+        UIView.animate(withDuration: messagesAnimationDelay) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func showLoadedState() {
+        self.heightOfLabel.constant = 0
+        
+        UIView.animate(withDuration: messagesAnimationDelay) {
+            self.view.layoutIfNeeded()
+        }
+
+    }
+    
+    func showError(with string: String) {
+        loadingLabel.text = NSLocalizedString("PhotoView.Error", comment: "") + " : " + string
+        self.heightOfLabel.constant = loadingLabelHeight
+        
+        UIView.animate(withDuration: messagesAnimationDelay) {
+            self.view.layoutIfNeeded()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + errorMessageOnScreenDelay) {
+            self.showLoadedState()
+        }
     }
 }
 
