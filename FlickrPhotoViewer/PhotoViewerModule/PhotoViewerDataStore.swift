@@ -36,7 +36,9 @@ class PhotoViewerDataStore {
         let pageToRequest = Int(ceil(Double(photoModels.count) / Double(photosPerPage) + 1.0))
         if pageToRequest > requestedPage {
             requestedPage = pageToRequest
-            delegate?.requestPage(with: requestedPage)
+            DispatchQueue.global().async {
+                self.delegate?.requestPage(with: pageToRequest)
+            }
         }
     }
 }
