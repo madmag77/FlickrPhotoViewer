@@ -19,6 +19,7 @@ class FlickrParserImpl: FlickrParser {
             let photosRootDict = objectResponse as? [String: Any],
             let stat = photosRootDict["stat"] as? String,
             stat != "fail" else {
+                // TODO: Parse server error and log it
                 return (ServerError(), [])
         }
         

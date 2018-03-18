@@ -28,9 +28,9 @@ protocol PhotoViewerDataStoreDelegate: class {
 }
 
 class PhotoViewerDataStore {
-    private let photosPerPage = 100
     private var requestedPage = 1
     
+    private let photosPerPage: Int
     private var photoModels: [RemotePhotoModel] = []
     
     // We want to search for index of item in array in order to update photo in
@@ -41,8 +41,9 @@ class PhotoViewerDataStore {
     
     weak var delegate: PhotoViewerDataStoreDelegate?
     
-    init(photoDownloadService: PhotoDownloadService?) {
+    init(photoDownloadService: PhotoDownloadService?, photosPerPage: Int) {
         self.photoDownloadService = photoDownloadService
+        self.photosPerPage = photosPerPage
         self.photoDownloadService?.delegate = self
     }
     

@@ -16,7 +16,8 @@ struct PhotoViewerBuilder {
         let view = storyboard.instantiateViewController(withIdentifier: "PhotoViewerViewController") as! PhotoViewerViewController
         
         let photoDownloadService = PhotoDownloadFlickrWebService(urlBuilder: FlickrUrlBuilder())
-        let dataSource = PhotoViewerDataStore(photoDownloadService: photoDownloadService)
+        let dataSource = PhotoViewerDataStore(photoDownloadService: photoDownloadService,
+                                              photosPerPage: 100)
         
         let photoSearchService = PhotoSearchFlickrWebService(urlFabric: FlickrUrlFabric(),
                                                              parser: FlickrParserImpl())
