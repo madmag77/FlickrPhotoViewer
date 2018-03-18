@@ -53,7 +53,9 @@ extension PhotoViewerPresenterImpl: PhotoViewerInteractorDelegate {
 
 extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
     func dataWasChanged() {
-        view?.updatePhotosView()
+        DispatchQueue.main.async {
+            self.view?.updatePhotosView()
+        }
     }
     
 }
