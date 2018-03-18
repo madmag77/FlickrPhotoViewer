@@ -15,6 +15,7 @@ protocol PhotoDownloadServiceDelegate: class {
 protocol PhotoDownloadService {
     var delegate: PhotoDownloadServiceDelegate? {get set}
     func getPhoto(for model: RemotePhotoModel) -> UIImage?
+    func clearCache()
 }
 
 class PhotoDownloadFlickrWebService: PhotoDownloadService {
@@ -24,7 +25,12 @@ class PhotoDownloadFlickrWebService: PhotoDownloadService {
     
     // Sure thing it's not good to store maybe thousands of images in memory
     // so memory cache should be limited, and persistent file cache introduced
+    // TODO: Make separate class - storage with limited storage in memory and big
+    // one in FS
     private var imageCache: [String: UIImage] = [:]
+    
+    // Since a lot of images are downloading simultaneously
+    // we want to make our cache threadsafe with usage of serial queue
     private let cacheQueue = DispatchQueue(label: "CacheQueue")
     
     init(urlBuilder: UrlBuilder) {
@@ -67,6 +73,12 @@ class PhotoDownloadFlickrWebService: PhotoDownloadService {
         return nil
     }
     
+    func clearCache() {
+        // TODO: Would be better to have array of all current download tasks and
+        // clear them in this moment
+        clearCacheSafely()
+    }
+    
     private func getImageFromCache(for id: String) -> () -> UIImage? {
         return {
             self.cacheQueue.sync {
@@ -79,10 +91,16 @@ class PhotoDownloadFlickrWebService: PhotoDownloadService {
         cacheQueue.async {
             self.imageCache[id] = image
             
-            // Seems not ideal - maybe it's better to create another queue in order to notify delegate
-            DispatchQueue.main.async {
+            DispatchQueue.global().async {
                 self.delegate?.justDownloadedImage(for: id)
             }
         }
     }
+    
+    private func clearCacheSafely() {
+        cacheQueue.async {
+            self.imageCache = [:]
+        }
+    }
+
 }

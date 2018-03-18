@@ -23,6 +23,13 @@ class PhotoViewerPresenterImpl {
     
     private let startAppSearchString = "unsorted"
     
+    init(searchStringHandler: SearchStringHandler?) {
+        self.searchStringHandler = searchStringHandler
+        self.searchStringHandler?.delegate = self
+
+    }
+    
+    // We want to fetch data for string that user searchs or for default one if it's first start
     private func fetchData(page: Int = 1) {
         DispatchQueue.main.async {
             self.view?.showLoadingState()
@@ -88,7 +95,9 @@ extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
     }
     
     func photoDownloaded(for index: Int) {
-        view?.updatePhoto(with: index)
+         DispatchQueue.main.async {
+            self.view?.updatePhoto(with: index)
+        }
     }
 }
 

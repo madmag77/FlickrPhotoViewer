@@ -35,9 +35,11 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
     private let urlSession = URLSession.shared
     private let urlFabric: UrlFabric
     private var photoSearchTask: URLSessionDataTask?
+    private let parser: FlickrParser
     
-    init(urlFabric: UrlFabric) {
+    init(urlFabric: UrlFabric, parser: FlickrParser) {
         self.urlFabric = urlFabric
+        self.parser = parser
     }
     
     func searchPhotos(with phrase: String, page: Int) {
@@ -45,6 +47,7 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
         // We want to have one more layer under service - like FlickrWebService
         // where all this magic with parameters and serialization/deserialization should happen
         // hopfully with usage of special libraries (e.g. Alamofire + json modeling)
+        // TODO: Make one more layer under this service
         
         guard let urlWithPhrase = URL(string: urlFabric.url.absoluteString + "&text=" + phrase + "&page=" + String(page)) else {
             self.delegate?.errorOccured(SearchInputError())
@@ -57,30 +60,17 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
                 return
             }
             
+            // Check if server returns not 200
             guard let httpResponse: HTTPURLResponse = response as? HTTPURLResponse,
                 httpResponse.statusCode == 200, let data = data else {
                 self.delegate?.errorOccured(ServerError())
                     return
             }
             
-            guard let objectResponse = try? JSONSerialization.jsonObject(with: data, options: []),
-                let photosRootDict = objectResponse as? [String: Any],
-                let stat = photosRootDict["stat"] as? String,
-                stat != "fail" else {
-                    self.delegate?.errorOccured(ServerError())
-                    return
-            }
+            let (parserError, photoModels) = self.parser.parseServerResponse(data: data)
             
-            guard let photosRoot = photosRootDict["photos"],
-                let photoDict = photosRoot as? [String: Any],
-                let photos = photoDict["photo"],
-                let photosArray = photos as? [NSDictionary] else {
-                    self.delegate?.errorOccured(ServerError())
-                    return
-            }
-            
-            guard let photoModels = self.deserializePhotosInfo(photosArray) else {
-                self.delegate?.errorOccured(ParseError())
+            guard parserError == nil else {
+                self.delegate?.errorOccured(parserError!)
                 return
             }
             
@@ -92,19 +82,4 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
         
     }
     
-    func deserializePhotosInfo(_ photos:  [NSDictionary]) -> [RemotePhotoModel]? {
-        var models: [RemotePhotoModel] = []
-        
-        for model in photos {
-            guard let id = model["id"] as? String,
-            let secret = model["secret"] as? String,
-            let server = model["server"] as? String,
-            let farm = model["farm"] as? Int,
-            let title = model["title"] as? String else { return nil }
-            
-            models.append(RemotePhotoModel(id: id, farm: farm, server: server, secret: secret, title: title))
-        }
-        
-        return models
-    }
 }

@@ -13,6 +13,7 @@ protocol SearchStringHandlerDelegate: class {
 }
 
 protocol SearchStringHandler {
+    var delegate: SearchStringHandlerDelegate? {set get}
     var searchString: String? {get}
     func stringChanged(to string: String)
 }
