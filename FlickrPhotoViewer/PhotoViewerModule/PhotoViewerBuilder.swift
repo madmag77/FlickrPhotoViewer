@@ -16,7 +16,7 @@ struct PhotoViewerBuilder {
         let view = storyboard.instantiateViewController(withIdentifier: "PhotoViewerViewController") as! PhotoViewerViewController
         
         let dataSource = PhotoViewerDataStore()
-        let photoSearchService = PhotoSearchFlickrWebService()
+        let photoSearchService = PhotoSearchFlickrWebService(urlFabric: FlickrUrlFabric())
         let interactor = PhotoViewerInteractorImpl(photoSearchService: photoSearchService)
         
         let presenter = PhotoViewerPresenterImpl()

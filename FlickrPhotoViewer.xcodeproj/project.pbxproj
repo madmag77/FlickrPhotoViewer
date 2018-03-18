@@ -21,6 +21,7 @@
 		EB1C26A3205CEB06003AC2A3 /* RemotePhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A2205CEB06003AC2A3 /* RemotePhotoModel.swift */; };
 		EB1C26A5205CF817003AC2A3 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A4205CF817003AC2A3 /* PhotoCell.swift */; };
 		EB1C26A8205D08AF003AC2A3 /* PhotoViewerDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */; };
+		EB1C26AA205DF384003AC2A3 /* URLFabric.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C26A9205DF384003AC2A3 /* URLFabric.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		EB1C26A2205CEB06003AC2A3 /* RemotePhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemotePhotoModel.swift; sourceTree = "<group>"; };
 		EB1C26A4205CF817003AC2A3 /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerDataStore.swift; sourceTree = "<group>"; };
+		EB1C26A9205DF384003AC2A3 /* URLFabric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLFabric.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */,
+				EB1C26A9205DF384003AC2A3 /* URLFabric.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -268,6 +271,7 @@
 				EB1C26A8205D08AF003AC2A3 /* PhotoViewerDataStore.swift in Sources */,
 				EB1C2670205CDBF6003AC2A3 /* AppDelegate.swift in Sources */,
 				EB1C26A3205CEB06003AC2A3 /* RemotePhotoModel.swift in Sources */,
+				EB1C26AA205DF384003AC2A3 /* URLFabric.swift in Sources */,
 				EB1C2696205CDD44003AC2A3 /* PhotoViewerBuilder.swift in Sources */,
 				EB1C26A5205CF817003AC2A3 /* PhotoCell.swift in Sources */,
 				EB1C2698205CDD5C003AC2A3 /* PhotoViewerInteractor.swift in Sources */,
