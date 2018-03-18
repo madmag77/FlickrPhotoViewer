@@ -32,7 +32,7 @@ class PhotoViewerPresenterImpl {
 extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
     func viewDidLoad() {
         // Just to show something at first start
-        // change to another API call e.g. method.recent 
+        // change to another API call e.g. method.recent
         interactor?.photoSearch(with: startAppSearchSstring)
     }
     
@@ -77,6 +77,5 @@ extension PhotoViewerPresenterImpl: SearchStringHandlerDelegate {
     func canSearchString(_ string: String) {
          interactor?.photoSearch(with: string)
     }
-    
     
 }

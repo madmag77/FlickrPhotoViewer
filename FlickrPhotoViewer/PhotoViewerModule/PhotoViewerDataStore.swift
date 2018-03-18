@@ -59,6 +59,7 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreReader {
 
 extension PhotoViewerDataStore: PhotoViewerDataStoreWriter {
     func clearAll() {
+        requestedPage = 1
         photoModels = []
         delegate?.dataWasChanged()
     }
