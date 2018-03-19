@@ -20,6 +20,8 @@ protocol PhotoDownloadService {
 
 class PhotoDownloadFlickrWebService: PhotoDownloadService {
     weak var delegate: PhotoDownloadServiceDelegate?
+    
+    // TODO: Inject session via protocol in order to make this class testable
     private let urlSession = URLSession.shared
     private let urlBuilder: UrlBuilder
     
@@ -75,7 +77,7 @@ class PhotoDownloadFlickrWebService: PhotoDownloadService {
     
     func clearCache() {
         // TODO: Would be better to have array of all current download tasks and
-        // clear them in this moment
+        // stop them in this moment
         clearCacheSafely()
     }
     
@@ -102,5 +104,4 @@ class PhotoDownloadFlickrWebService: PhotoDownloadService {
             self.imageCache = [:]
         }
     }
-
 }

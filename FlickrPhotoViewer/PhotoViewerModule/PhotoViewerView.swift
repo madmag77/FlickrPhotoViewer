@@ -115,7 +115,7 @@ extension PhotoViewerViewController: UISearchResultsUpdating {
             return
         }
         
-        output?.changeSearchString(to: searchController.searchBar.text ?? "")
+        output?.searchStringWasChanged(to: searchController.searchBar.text ?? "")
     }
 }
 

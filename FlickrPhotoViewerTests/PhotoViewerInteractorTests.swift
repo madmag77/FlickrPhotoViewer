@@ -57,7 +57,7 @@ class PhotoViewerInteractorTests: XCTestCase {
         let page = 1
         
         // When
-        interactor?.photoSearch(with: searchString, page: page)
+        interactor?.searchPhotos(with: searchString, page: page)
         
         // Then
         XCTAssertEqual(photoSearchServiceMock?.searchPhotosCalledWithPhraseAndPage.0, searchString)
@@ -71,7 +71,7 @@ class PhotoViewerInteractorTests: XCTestCase {
         let page = 2
         
         // When
-        interactor?.photoSearch(with: searchString, page: page)
+        interactor?.searchPhotos(with: searchString, page: page)
         
         // Then
         XCTAssertEqual(photoSearchServiceMock?.searchPhotosCalledWithPhraseAndPage.0, searchString)
@@ -85,7 +85,7 @@ class PhotoViewerInteractorTests: XCTestCase {
         let page = 1
         
         // When
-        interactor?.photoSearch(with: searchString, page: page)
+        interactor?.searchPhotos(with: searchString, page: page)
         
         // Then
         XCTAssertNil(photoSearchServiceMock?.searchPhotosCalledWithPhraseAndPage.0)

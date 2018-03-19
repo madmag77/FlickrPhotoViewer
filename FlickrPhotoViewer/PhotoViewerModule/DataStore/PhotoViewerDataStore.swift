@@ -28,6 +28,8 @@ protocol PhotoViewerDataStoreDelegate: class {
 }
 
 class PhotoViewerDataStore {
+    weak var delegate: PhotoViewerDataStoreDelegate?
+
     private var requestedPage = 1
     
     private let photosPerPage: Int
@@ -39,7 +41,6 @@ class PhotoViewerDataStore {
     
     private var photoDownloadService: PhotoDownloadService?
     
-    weak var delegate: PhotoViewerDataStoreDelegate?
     
     init(photoDownloadService: PhotoDownloadService?, photosPerPage: Int) {
         self.photoDownloadService = photoDownloadService
@@ -104,7 +105,6 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreWriter {
         addIdToIndex(from: models)
         delegate?.dataWasChanged()
     }
-
 }
 
 extension PhotoViewerDataStore: PhotoDownloadServiceDelegate {
@@ -115,5 +115,4 @@ extension PhotoViewerDataStore: PhotoDownloadServiceDelegate {
         
         delegate?.photoDownloaded(for: index)
     }
-    
 }

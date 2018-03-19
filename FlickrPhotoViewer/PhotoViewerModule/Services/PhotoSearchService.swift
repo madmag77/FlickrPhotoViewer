@@ -32,6 +32,7 @@ protocol PhotoSearchService {
 
 class PhotoSearchFlickrWebService: PhotoSearchService {
     weak var delegate: PhotoSearchServiceDelegate?
+    
     private let urlSession = URLSession.shared
     private let urlFabric: UrlFabric
     private var photoSearchTask: URLSessionDataTask?
@@ -75,11 +76,8 @@ class PhotoSearchFlickrWebService: PhotoSearchService {
             }
             
             self.delegate?.photosFound(photoModels)
-            
         }
         
         photoSearchTask?.resume()
-        
     }
-    
 }

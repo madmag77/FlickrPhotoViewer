@@ -12,21 +12,20 @@ protocol PhotoViewerPresenter {
     func viewDidLoad()
     func itemsCount() -> Int
     func configureItem(_ item: PhotoCellItem, with indexPath: IndexPath)
-    func changeSearchString(to string: String)
+    func searchStringWasChanged(to string: String)
 }
 
 class PhotoViewerPresenterImpl {
     var interactor: PhotoViewerInteractor?
     weak var view: PhotoViewerView?
     var dataStore: PhotoViewerDataStoreReader?
-    var searchStringHandler: SearchStringHandler?
+    private var searchStringHandler: SearchStringHandler?
     
     private let startAppSearchString = "unsorted"
     
     init(searchStringHandler: SearchStringHandler?) {
         self.searchStringHandler = searchStringHandler
         self.searchStringHandler?.delegate = self
-
     }
     
     // We want to fetch data for string that user searchs or for default one if it's first start
@@ -35,7 +34,7 @@ class PhotoViewerPresenterImpl {
             self.view?.showLoadingState()
         }
         let searchString = searchStringHandler?.searchString ?? startAppSearchString
-        interactor?.photoSearch(with: searchString, page: page)
+        interactor?.searchPhotos(with: searchString, page: page)
     }
 }
 
@@ -60,13 +59,11 @@ extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
         if let image = image {
             item.setPhoto(image)
         }
-
     }
     
-    func changeSearchString(to string: String) {
-        searchStringHandler?.stringChanged(to: string)
+    func searchStringWasChanged(to string: String) {
+        searchStringHandler?.stringWasChanged(to: string)
     }
-
 }
 
 extension PhotoViewerPresenterImpl: PhotoViewerInteractorDelegate {
@@ -105,5 +102,4 @@ extension PhotoViewerPresenterImpl: SearchStringHandlerDelegate {
     func canSearchString(_ string: String) {
         fetchData()
     }
-    
 }

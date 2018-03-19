@@ -14,7 +14,7 @@ protocol PhotoViewerInteractorDelegate: class {
 }
 
 protocol PhotoViewerInteractor {
-    func photoSearch(with phrase: String, page: Int)
+    func searchPhotos(with phrase: String, page: Int)
 }
 
 class PhotoViewerInteractorImpl: PhotoViewerInteractor {
@@ -27,7 +27,7 @@ class PhotoViewerInteractorImpl: PhotoViewerInteractor {
         self.photoSearchService?.delegate = self
     }
     
-    func photoSearch(with phrase: String, page: Int) {
+    func searchPhotos(with phrase: String, page: Int) {
         // If search string empty it means user want to clear results
         guard phrase.count > 0 else {
             dataStore?.clearAll()
@@ -42,7 +42,6 @@ class PhotoViewerInteractorImpl: PhotoViewerInteractor {
         
         photoSearchService?.searchPhotos(with: phrase, page: page)
     }
-
 }
 
 extension PhotoViewerInteractorImpl: PhotoSearchServiceDelegate {
@@ -54,5 +53,4 @@ extension PhotoViewerInteractorImpl: PhotoSearchServiceDelegate {
     func errorOccured(_ error: Error) {
         delegate?.errorOccured(error)
     }
-    
 }

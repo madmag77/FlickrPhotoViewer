@@ -9,6 +9,14 @@
 import UIKit
 
 struct PhotoViewerBuilder {
+    struct defaults {
+        // Flickr default value of photos by page
+        static let photosByPage = 100
+        
+        // Delay between last symbol user entered and API call with this symbol
+        static let searchSymbolsDelay = 500
+    }
+    
     func buildDefaultModule() -> UIViewController {
         let storyboard = UIStoryboard.init(name: "Main",
                                            bundle: nil)
@@ -17,14 +25,14 @@ struct PhotoViewerBuilder {
         
         let photoDownloadService = PhotoDownloadFlickrWebService(urlBuilder: FlickrUrlBuilder())
         let dataSource = PhotoViewerDataStore(photoDownloadService: photoDownloadService,
-                                              photosPerPage: 100)
+                                              photosPerPage: defaults.photosByPage)
         
         let photoSearchService = PhotoSearchFlickrWebService(urlFabric: FlickrUrlFabric(),
                                                              parser: FlickrParserImpl())
         
         let interactor = PhotoViewerInteractorImpl(photoSearchService: photoSearchService)
         
-        let searchStringHandler = SearchStringDelayedHandler(delayInMs: 500)
+        let searchStringHandler = SearchStringDelayedHandler(delayInMs: defaults.searchSymbolsDelay)
         let presenter = PhotoViewerPresenterImpl(searchStringHandler: searchStringHandler)
         presenter.view = view
         presenter.interactor = interactor
@@ -36,6 +44,5 @@ struct PhotoViewerBuilder {
         interactor.dataStore = dataSource
         
         return view
-
     }
 }

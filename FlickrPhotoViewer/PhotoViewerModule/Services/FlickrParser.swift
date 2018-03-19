@@ -52,5 +52,4 @@ class FlickrParserImpl: FlickrParser {
         
         return models
     }
-
 }
