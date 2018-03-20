@@ -35,3 +35,8 @@ Again in case of IGListKit we will update models in DataSource and Collection Vi
  Cons: A lot of additional code and protocols, we must not forget about setting of delegates and make them weak. 
  
  The other options: Closures and RX streams. 
+ 
+ **Unit tests** 
+ 1. There are just two of them with 100% coverage of DataSource and Interactor components. I choose the most complex - DataSource and one just to show how to cover VIPER module's part. 
+ 2. In usual working process it makes sense to write some tests before code - at least for such components like DataSource, SearchStringHandler and Parser since they have complex logic inside. In my opinion it is rather hard to use TDD everywhere in every day work in xcode because of huge build time, however in case project is modularized it would be possible.
+ 
