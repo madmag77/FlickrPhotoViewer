@@ -9,6 +9,7 @@
 import UIKit
 
 protocol PhotoViewerView: class {
+    var configureCellItem: ((_ item: PhotoCellItem, _ title: String?, _ image: UIImage?) -> ())? {get set}
     func updatePhotosView()
     func updatePhoto(with index: Int)
     func showLoadingState()
@@ -31,6 +32,8 @@ fileprivate struct CollectionViewUISetup {
 class PhotoViewerViewController: UIViewController {
     
     var output: PhotoViewerPresenter?
+    var dataStore: PhotoViewerDataStoreReader?
+    var configureCellItem: ((_ item: PhotoCellItem, _ title: String?, _ image: UIImage?) -> ())?
 
     @IBOutlet weak var photoCollectionView: UICollectionView!
     
@@ -121,7 +124,7 @@ extension PhotoViewerViewController: UISearchResultsUpdating {
 
 extension PhotoViewerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return output?.itemsCount() ?? 0
+        return dataStore?.itemsCount() ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -135,10 +138,12 @@ extension PhotoViewerViewController: UICollectionViewDataSource {
 
 extension PhotoViewerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        guard let cell = cell as? PhotoCellItem else { return }
-        output?.configureItem(cell, with: indexPath)
+        guard let (title, image) = dataStore?.item(for: indexPath.row),
+            let cell = cell as? PhotoCellItem else { return }
+        
+        configureCellItem?(cell, title, image)
+        output?.willDisplayCell(with: indexPath.row, outOf: collectionView.numberOfItems(inSection: indexPath.section))
     }
-
 }
 
 extension PhotoViewerViewController: UICollectionViewDelegateFlowLayout {

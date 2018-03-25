@@ -6,59 +6,68 @@
 //  Copyright © 2018 MadMag. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol PhotoViewerPresenter {
     func viewDidLoad()
-    func itemsCount() -> Int
-    func configureItem(_ item: PhotoCellItem, with indexPath: IndexPath)
     func searchStringWasChanged(to string: String)
+    func willDisplayCell(with index: Int, outOf count: Int)
 }
 
 class PhotoViewerPresenterImpl {
     var interactor: PhotoViewerInteractor?
     weak var view: PhotoViewerView?
-    var dataStore: PhotoViewerDataStoreReader?
-    private var searchStringHandler: SearchStringHandler?
     
+    private var searchString: String {
+        return searchStringHandler?.searchString ?? startAppSearchString
+    }
+    private var searchStringHandler: SearchStringHandler?
     private let startAppSearchString = "unsorted"
     
     init(searchStringHandler: SearchStringHandler?) {
         self.searchStringHandler = searchStringHandler
         self.searchStringHandler?.delegate = self
     }
-    
+
     // We want to fetch data for string that user searchs or for default one if it's first start
-    private func fetchData(page: Int = 1) {
+    private func searchPhotos(with string: String) {
         DispatchQueue.main.async {
             self.view?.showLoadingState()
         }
-        let searchString = searchStringHandler?.searchString ?? startAppSearchString
-        interactor?.searchPhotos(with: searchString, page: page)
+        
+        if string.count == 0 {
+            // Empty string - let's clear search
+            interactor?.clearSearch()
+        } else {
+            interactor?.startSearchingPhotos(with: string)
+        }
+    }
+    
+    private func configureItem() -> (_ item: PhotoCellItem, _ title: String?, _ image: UIImage?) -> () {
+        return {item, title, image in
+            if let title = title {
+                item.setTitle(title)
+            }
+            
+            if let image = image {
+                item.setPhoto(image)
+            }
+        }
     }
 }
 
 extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
     func viewDidLoad() {
+        
+        view?.configureCellItem = configureItem()
+        
         // Just to show something at first start
         // TODO: change to another API call e.g. method.recent
-        self.fetchData()
+        self.searchPhotos(with: startAppSearchString)
     }
     
-    func itemsCount() -> Int {
-        return dataStore?.itemsCount() ?? 0
-    }
-    
-    func configureItem(_ item: PhotoCellItem, with indexPath: IndexPath) {
-        guard let dataStore = dataStore else { return }
-        let (title, image) = dataStore.item(for: indexPath.row)
-        if let title = title {
-            item.setTitle(title)
-        }
-        
-        if let image = image {
-            item.setPhoto(image)
-        }
+    func willDisplayCell(with index: Int, outOf count: Int) {
+        interactor?.updatePaging(with: index, outOf: count, searchString: searchString)
     }
     
     func searchStringWasChanged(to string: String) {
@@ -86,11 +95,7 @@ extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
             self.view?.updatePhotosView()
         }
     }
-    
-    func requestPage(with number: Int) {
-        fetchData(page: number)
-    }
-    
+        
     func photoDownloaded(for index: Int) {
          DispatchQueue.main.async {
             self.view?.updatePhoto(with: index)
@@ -100,6 +105,6 @@ extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
 
 extension PhotoViewerPresenterImpl: SearchStringHandlerDelegate {
     func canSearchString(_ string: String) {
-        fetchData()
+        searchPhotos(with: string)
     }
 }
