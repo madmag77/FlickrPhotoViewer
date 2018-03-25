@@ -9,42 +9,27 @@
 import UIKit
 
 protocol PhotoDownloadServiceDelegate: class {
-    func justDownloadedImage(for id: String)
+    func justDownloadedImage(_ image: UIImage, for id: String)
+    func errorOccured(_ error: Error)
 }
 
 protocol PhotoDownloadService {
     var delegate: PhotoDownloadServiceDelegate? {get set}
-    func getPhoto(for model: RemotePhotoModel) -> UIImage?
-    func clearCache()
+    func downloadPhotos(for models: [RemotePhotoModel])
 }
 
-class PhotoDownloadFlickrWebService: PhotoDownloadService {
+class PhotoDownloadFlickrWebService {
     weak var delegate: PhotoDownloadServiceDelegate?
     
     // TODO: Inject session via protocol in order to make this class testable
     private let urlSession = URLSession.shared
     private let urlBuilder: UrlBuilder
     
-    // Sure thing it's not good to store maybe thousands of images in memory
-    // so memory cache should be limited, and persistent file cache introduced
-    // TODO: Make separate class - storage with limited storage in memory and big
-    // one in FS
-    private var imageCache: [String: UIImage] = [:]
-    
-    // Since a lot of images are downloading simultaneously
-    // we want to make our cache threadsafe with usage of serial queue
-    private let cacheQueue = DispatchQueue(label: "CacheQueue")
-    
     init(urlBuilder: UrlBuilder) {
         self.urlBuilder = urlBuilder
     }
     
-    func getPhoto(for model: RemotePhotoModel) -> UIImage? {
-        // Because of synchronisation of the cache this operation may take a bit time
-        // (when write operation occured simultaneously)
-        if let image = getImageFromCache(for: model.id)() {
-            return image
-        }
+    private func downloadPhoto(for model: RemotePhotoModel) {
         
         let url = urlBuilder.getUrlToDownloadPhoto(farm: model.farm,
                                                    server: model.server,
@@ -68,40 +53,16 @@ class PhotoDownloadFlickrWebService: PhotoDownloadService {
                 return
             }
             
-            self.putImageToCache(for: model.id, image: image)
+            self.delegate?.justDownloadedImage(image, for: model.id)
             
         }.resume()
-        
-        return nil
     }
-    
-    func clearCache() {
-        // TODO: Would be better to have array of all current download tasks and
-        // stop them in this moment
-        clearCacheSafely()
-    }
-    
-    private func getImageFromCache(for id: String) -> () -> UIImage? {
-        return {
-            self.cacheQueue.sync {
-                return self.imageCache[id]
-            }
-        }
-    }
-    
-    private func putImageToCache(for id: String, image: UIImage) {
-        cacheQueue.async {
-            self.imageCache[id] = image
-            
-            DispatchQueue.global().async {
-                self.delegate?.justDownloadedImage(for: id)
-            }
-        }
-    }
-    
-    private func clearCacheSafely() {
-        cacheQueue.async {
-            self.imageCache = [:]
+}
+
+extension PhotoDownloadFlickrWebService: PhotoDownloadService {
+    func downloadPhotos(for models: [RemotePhotoModel]) {
+        models.forEach { (model) in
+            self.downloadPhoto(for: model)
         }
     }
 }

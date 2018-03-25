@@ -23,22 +23,27 @@ struct PhotoViewerBuilder {
         
         let view = storyboard.instantiateViewController(withIdentifier: "PhotoViewerViewController") as! PhotoViewerViewController
         
-        let photoDownloadService = PhotoDownloadFlickrWebService(urlBuilder: FlickrUrlBuilder())
-        let dataSource = PhotoViewerDataStore(photoDownloadService: photoDownloadService,
-                                              photosPerPage: defaults.photosByPage)
+        let photoCache = PhotoCacheInMemory()
+        let dataSource = PhotoViewerDataStore(photoCache: photoCache)
         
+        let photoDownloadService = PhotoDownloadFlickrWebService(urlBuilder: FlickrUrlBuilder())
+
         let photoSearchService = PhotoSearchFlickrWebService(urlFabric: FlickrUrlFabric(),
                                                              parser: FlickrParserImpl())
         
-        let interactor = PhotoViewerInteractorImpl(photoSearchService: photoSearchService)
+        let pagingHandler = FlickrPagingImpl(itemsPerPage: defaults.photosByPage)
+        let interactor = PhotoViewerInteractorImpl(photoSearchService: photoSearchService,
+                                                   photoDownloadService: photoDownloadService,
+                                                   pagingHandler: pagingHandler,
+                                                   photoCache: photoCache)
         
         let searchStringHandler = SearchStringDelayedHandler(delayInMs: defaults.searchSymbolsDelay)
         let presenter = PhotoViewerPresenterImpl(searchStringHandler: searchStringHandler)
         presenter.view = view
         presenter.interactor = interactor
-        presenter.dataStore = dataSource
         dataSource.delegate = presenter
         
+        view.dataStore = dataSource
         view.output = presenter
         interactor.delegate = presenter
         interactor.dataStore = dataSource

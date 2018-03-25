@@ -23,47 +23,24 @@ protocol PhotoViewerDataStoreWriter: class {
 // For presenter in order to have return calls
 protocol PhotoViewerDataStoreDelegate: class {
     func dataWasChanged()
-    func requestPage(with number: Int)
     func photoDownloaded(for index: Int)
 }
 
 class PhotoViewerDataStore {
     weak var delegate: PhotoViewerDataStoreDelegate?
 
-    private var requestedPage = 1
-    
-    private let photosPerPage: Int
     private var photoModels: [RemotePhotoModel] = []
     
     // We want to search for index of item in array in order to update photo in
     // definite cell (cells index is the same as index in array)
     private var mapIdToIndex: [String: Int] = [:]
+    private var photoCache: PhotoCacheReader?
     
-    private var photoDownloadService: PhotoDownloadService?
-    
-    
-    init(photoDownloadService: PhotoDownloadService?, photosPerPage: Int) {
-        self.photoDownloadService = photoDownloadService
-        self.photosPerPage = photosPerPage
-        self.photoDownloadService?.delegate = self
+    init(photoCache: PhotoCacheReader?) {
+        self.photoCache = photoCache
+        self.photoCache?.delegate = self
     }
-    
-    // Paging is simple - when we reach half a page before end - we need to fetch next page
-    // TODO: Make paging as separate class and use it from Presenter
-    private func checkPaging(with index: Int) {
-        guard index >= photoModels.count - photosPerPage / 2 else { return }
-        
-        let pageToRequest = Int(ceil(Double(photoModels.count) / Double(photosPerPage) + 1.0))
-        if pageToRequest > requestedPage {
-            requestedPage = pageToRequest
-            
-            // We don't want to take much time while user scrolling
-            DispatchQueue.global().async {
-                self.delegate?.requestPage(with: pageToRequest)
-            }
-        }
-    }
-    
+
     private func addIdToIndex(from models: [RemotePhotoModel]) {
         var index = photoModels.count - models.count
         for model in models {
@@ -81,11 +58,8 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreReader {
     func item(for index: Int) -> (title: String?, image: UIImage?) {
         guard index < photoModels.count else { return (nil, nil) }
         
-        // Check for paging
-        checkPaging(with: index)
-        
-        // Check for photo - if there is no photo in cache DownloadService will download it
-        let image = photoDownloadService?.getPhoto(for: photoModels[index])
+        // Check for photo in cache
+        let image = photoCache?.photo(for: photoModels[index].id)()
         
         return (photoModels[index].title, image)
     }
@@ -93,10 +67,8 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreReader {
 
 extension PhotoViewerDataStore: PhotoViewerDataStoreWriter {
     func clearAll() {
-        requestedPage = 1
         photoModels = []
         mapIdToIndex = [:]
-        photoDownloadService?.clearCache()
         delegate?.dataWasChanged()
     }
     
@@ -107,10 +79,9 @@ extension PhotoViewerDataStore: PhotoViewerDataStoreWriter {
     }
 }
 
-extension PhotoViewerDataStore: PhotoDownloadServiceDelegate {
-    // Notice from download service that we asked about image
-    // and it's ready now
-    func justDownloadedImage(for id: String) {
+extension PhotoViewerDataStore: PhotoCacheNotificationsDelegate {
+    // Notice from photo cache about new photo
+    func justGotPhoto(for id: String) {
         guard let index = mapIdToIndex[id] else { return }
         
         delegate?.photoDownloaded(for: index)

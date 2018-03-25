@@ -21,7 +21,7 @@ class ParseError: Error {
 }
 
 protocol PhotoSearchServiceDelegate: class {
-    func photosFound(_ photos: [RemotePhotoModel])
+    func photosFound(_ photoModels: [RemotePhotoModel])
     func errorOccured(_ error: Error)
 }
 

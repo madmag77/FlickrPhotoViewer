@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB02BEA1206775E70072FF20 /* FlickrPaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB02BEA0206775E70072FF20 /* FlickrPaging.swift */; };
+		EB02BEA3206786BB0072FF20 /* PhotoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB02BEA2206786BB0072FF20 /* PhotoCache.swift */; };
 		EB1C2670205CDBF6003AC2A3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB1C266F205CDBF6003AC2A3 /* AppDelegate.swift */; };
 		EB1C2675205CDBF6003AC2A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB1C2673205CDBF6003AC2A3 /* Main.storyboard */; };
 		EB1C2677205CDBF6003AC2A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB1C2676205CDBF6003AC2A3 /* Assets.xcassets */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EB02BEA0206775E70072FF20 /* FlickrPaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrPaging.swift; sourceTree = "<group>"; };
+		EB02BEA2206786BB0072FF20 /* PhotoCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCache.swift; sourceTree = "<group>"; };
 		EB1C266C205CDBF6003AC2A3 /* FlickrPhotoViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlickrPhotoViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB1C266F205CDBF6003AC2A3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EB1C2674205CDBF6003AC2A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -178,7 +182,9 @@
 		EB1C26AF205E3AF8003AC2A3 /* DataStore */ = {
 			isa = PBXGroup;
 			children = (
+				EB02BEA2206786BB0072FF20 /* PhotoCache.swift */,
 				EB1C26A7205D08AF003AC2A3 /* PhotoViewerDataStore.swift */,
+				EB02BEA0206775E70072FF20 /* FlickrPaging.swift */,
 			);
 			path = DataStore;
 			sourceTree = "<group>";
@@ -289,12 +295,14 @@
 			files = (
 				EB1C2694205CDD1C003AC2A3 /* PhotoViewerPresenter.swift in Sources */,
 				EB1C26AC205E08BB003AC2A3 /* SearchStringHandler.swift in Sources */,
+				EB02BEA3206786BB0072FF20 /* PhotoCache.swift in Sources */,
 				EB1C26A8205D08AF003AC2A3 /* PhotoViewerDataStore.swift in Sources */,
 				EB1C2670205CDBF6003AC2A3 /* AppDelegate.swift in Sources */,
 				EB1C26A3205CEB06003AC2A3 /* RemotePhotoModel.swift in Sources */,
 				EB1C26AA205DF384003AC2A3 /* URLFabric.swift in Sources */,
 				EB1C2696205CDD44003AC2A3 /* PhotoViewerBuilder.swift in Sources */,
 				EB1C26A5205CF817003AC2A3 /* PhotoCell.swift in Sources */,
+				EB02BEA1206775E70072FF20 /* FlickrPaging.swift in Sources */,
 				EB1C26AE205E1761003AC2A3 /* PhotoDownloadService.swift in Sources */,
 				EB1C26B1205E41A7003AC2A3 /* FlickrParser.swift in Sources */,
 				EB1C2698205CDD5C003AC2A3 /* PhotoViewerInteractor.swift in Sources */,
