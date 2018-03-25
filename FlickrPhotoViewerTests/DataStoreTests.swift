@@ -12,8 +12,9 @@ import XCTest
 class DataStoreTests: XCTestCase {
     
     var dataStore: PhotoViewerDataStore?
-    var downloadServiceMock: PhotoDownloadServiceMock?
     var delegateMock: DataStoreDelegateMock?
+    var photoCacheMock: PhotoCacheReaderMock?
+    
     let testModels = [
         RemotePhotoModel(id: "id1",
                          farm: 1,
@@ -33,9 +34,8 @@ class DataStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
         delegateMock = DataStoreDelegateMock()
-        downloadServiceMock = PhotoDownloadServiceMock()
-        dataStore = PhotoViewerDataStore(photoDownloadService: downloadServiceMock,
-                                         photosPerPage: testPhotosPerPage)
+        photoCacheMock = PhotoCacheReaderMock()
+        dataStore = PhotoViewerDataStore(photoCache: photoCacheMock)
         
         dataStore?.delegate = delegateMock
     }
@@ -43,7 +43,7 @@ class DataStoreTests: XCTestCase {
     override func tearDown() {
         dataStore = nil
         delegateMock = nil
-        downloadServiceMock = nil
+        photoCacheMock = nil
         super.tearDown()
     }
     
@@ -112,164 +112,29 @@ class DataStoreTests: XCTestCase {
         XCTAssertNil(item?.title)
         XCTAssertNil(item?.image)
     }
-    
-    func testPagingCallFetching() {
-        // Given
-        let models = testModels
-        
-        // When
-        dataStore?.addModels(models)
-        let _ = dataStore?.item(for: 0)
-        
-        // Then (too early for paging)
-        XCTAssertNil(delegateMock?.requestPageCalledWithNum)
-        
-         // When
-        let _  = dataStore?.item(for: models.count - 1)
-
-        // Then (request next page - 2)
-        wait(for: [(delegateMock?.expectationPage2)!], timeout: 1.0)
-        
-        // When
-        dataStore?.addModels(models)
-        let _  = dataStore?.item(for: models.count * 2 - testPhotosPerPage / 2)
-
-        // Then (request next page - 3)
-        wait(for: [(delegateMock?.expectationPage3)!], timeout: 1.0)
-    }
-    
-    func testPagingResetAfterClear() {
-        // Given
-        let models = testModels
-        
-        // When
-        dataStore?.addModels(models)
-        let _ = dataStore?.item(for: 0)
-        
-        // Then
-        XCTAssertNil(delegateMock?.requestPageCalledWithNum)
-        
-        // When
-        let _  = dataStore?.item(for: models.count - 1)
-        
-        // Then (request next page - 2)
-        wait(for: [(delegateMock?.expectationPage2)!], timeout: 1.0)
-
-        // When
-        dataStore?.clearAll()
-        dataStore?.addModels(models)
-        let _ = dataStore?.item(for: models.count - 1)
-        
-        // Then (again request next page - 3)
-        wait(for: [(delegateMock?.expectationPage2)!], timeout: 1.0)
-    }
-    
-    func testAskForDownloadingImage() {
-        // Given
-        let models = testModels
-        
-        // When
-        dataStore?.addModels(models)
-        let _ = dataStore?.item(for: 1)
-        
-        // Then
-        XCTAssertEqual(downloadServiceMock?.getPhotoCalledWithModel?.id, models[1].id)
-    }
-    
-    func testIfReturnRightImage() {
-        // Given
-        let models = testModels
-        
-        // When
-        dataStore?.addModels(models)
-        downloadServiceMock?.getPhotoImageToReturn = #imageLiteral(resourceName: "placeholder")
-        let (_, image) = dataStore?.item(for: 1) ?? (nil, nil)
-        
-        // Then
-        XCTAssertEqual(image, #imageLiteral(resourceName: "placeholder"))
-    }
-    
-    func testIfCallDelegateAfterImageWasDownloaded() {
-        // Given
-        let models = testModels
-        let indexToCallWith = 1
-        
-        // When
-        dataStore?.addModels(models)
-        dataStore?.justDownloadedImage(for: models[indexToCallWith].id)
-        
-        // Then
-        XCTAssertEqual(delegateMock?.photoDownloadedCalledWithIndex, indexToCallWith)
-    }
-    
-    func testIfNotCallDelegateAfterUnknownImageWasDownloaded() {
-        // Given
-        let models = testModels
-        let strangeId = "STRANGE_ID"
-        
-        // When
-        dataStore?.addModels(models)
-        dataStore?.justDownloadedImage(for: strangeId)
-        
-        // Then
-        XCTAssertNil(delegateMock?.photoDownloadedCalledWithIndex)
-    }
-    
-    func testIfCallClearCacheWhenClearingSelfContent() {
-        // Given
-        let models = testModels
-        
-        // When
-        dataStore?.addModels(models)
-        dataStore?.clearAll()
-        
-        // Then
-        XCTAssertTrue(downloadServiceMock?.clearCacheCalled ?? false)
-    }
-    
-}
-
-class PhotoDownloadServiceMock: PhotoDownloadService {
-    var getPhotoCalledWithModel: RemotePhotoModel? = nil
-    var clearCacheCalled: Bool = false
-    var getPhotoImageToReturn: UIImage? = nil
-    var delegate: PhotoDownloadServiceDelegate?
-    
-    func getPhoto(for model: RemotePhotoModel) -> UIImage? {
-        getPhotoCalledWithModel = model
-        return getPhotoImageToReturn
-    }
-    
-    func clearCache() {
-        clearCacheCalled = true
-    }
 }
 
 class DataStoreDelegateMock: PhotoViewerDataStoreDelegate {
-    let expectationPage2 = XCTestExpectation(description: "request page 2")
-    let expectationPage3 = XCTestExpectation(description: "request page 3")
     var dataWasChangedCalled: Bool = false
-    var requestPageCalledWithNum: Int? = nil
     var photoDownloadedCalledWithIndex: Int? = nil
     
     func dataWasChanged() {
         dataWasChangedCalled = true
     }
     
-    func requestPage(with number: Int) {
-        requestPageCalledWithNum = number
-        if number == 2 {
-            expectationPage2.fulfill()
-        }
-        
-        if number == 3 {
-            expectationPage3.fulfill()
-        }
-    }
-    
     func photoDownloaded(for index: Int) {
         photoDownloadedCalledWithIndex = index
     }
-    
-    
 }
+
+class PhotoCacheReaderMock: PhotoCacheReader {
+    var photoCalled: Bool = false
+
+    var delegate: PhotoCacheNotificationsDelegate?
+    
+    func photo(for itemId: String) -> () -> UIImage? {
+        photoCalled = true
+        return { nil }
+    }
+}
+
