@@ -11,7 +11,8 @@ import UIKit
 protocol PhotoViewerPresenter {
     func viewDidLoad()
     func searchStringWasChanged(to string: String)
-    func willDisplayCell(with index: Int, outOf count: Int)
+    func itemsCount() -> Int
+    func configureCellItem(_ item: PhotoCellItem, at index: Int)
 }
 
 class PhotoViewerPresenterImpl {
@@ -56,20 +57,32 @@ class PhotoViewerPresenterImpl {
     }
 }
 
-extension PhotoViewerPresenterImpl: PhotoViewerPresenter {
+extension PhotoViewerPresenterImpl: PhotoViewerPresenter {    
     func viewDidLoad() {
-        
-        view?.configureCellItem = configureItem()
         
         // Just to show something at first start
         // TODO: change to another API call e.g. method.recent
         self.searchPhotos(with: startAppSearchString)
     }
     
-    func willDisplayCell(with index: Int, outOf count: Int) {
-        interactor?.updatePaging(with: index, outOf: count, searchString: searchString)
+    func itemsCount() -> Int {
+        return interactor?.itemsCount() ?? 0
     }
-    
+
+    func configureCellItem(_ item: PhotoCellItem, at index: Int) {
+        guard let (title, image) = interactor?.item(for: index) else {
+            return
+        }
+        
+        if let title = title {
+            item.setTitle(title)
+        }
+        
+        if let image = image {
+            item.setPhoto(image)
+        }
+    }
+
     func searchStringWasChanged(to string: String) {
         searchStringHandler?.stringWasChanged(to: string)
     }
@@ -82,22 +95,15 @@ extension PhotoViewerPresenterImpl: PhotoViewerInteractorDelegate {
         }
     }
     
-    func dataLoaded() {
+    func dataChanged() {
         DispatchQueue.main.async {
             self.view?.showLoadedState()
-        }
-    }
-}
-
-extension PhotoViewerPresenterImpl: PhotoViewerDataStoreDelegate {
-    func dataWasChanged() {
-         DispatchQueue.main.async {
             self.view?.updatePhotosView()
         }
     }
-        
+    
     func photoDownloaded(for index: Int) {
-         DispatchQueue.main.async {
+        DispatchQueue.main.async {
             self.view?.updatePhoto(with: index)
         }
     }
