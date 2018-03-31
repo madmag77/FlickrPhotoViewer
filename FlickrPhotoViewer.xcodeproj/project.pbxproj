@@ -90,6 +90,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EB02BEAA206F82360072FF20 /* PhotoProvider */ = {
+			isa = PBXGroup;
+			children = (
+				EB02BEA2206786BB0072FF20 /* PhotoCache.swift */,
+				EB1C26AD205E1761003AC2A3 /* PhotoDownloadService.swift */,
+				EB02BEA8206F7BE00072FF20 /* PhotoProvider.swift */,
+			);
+			path = PhotoProvider;
+			sourceTree = "<group>";
+		};
+		EB02BEAB206F82560072FF20 /* MetaPhotoProvider */ = {
+			isa = PBXGroup;
+			children = (
+				EB02BEA0206775E70072FF20 /* FlickrPaging.swift */,
+				EB02BEA6206F6B100072FF20 /* MetaPhotoCache.swift */,
+				EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */,
+				EB1C26B0205E41A7003AC2A3 /* FlickrParser.swift */,
+				EB02BEA4206F55290072FF20 /* MetaPhotoProvider.swift */,
+			);
+			path = MetaPhotoProvider;
+			sourceTree = "<group>";
+		};
 		EB1C2663205CDBF6003AC2A3 = {
 			isa = PBXGroup;
 			children = (
@@ -111,6 +133,8 @@
 		EB1C266E205CDBF6003AC2A3 /* FlickrPhotoViewer */ = {
 			isa = PBXGroup;
 			children = (
+				EB1C26A1205CEAD3003AC2A3 /* Models */,
+				EB1C269E205CEA1C003AC2A3 /* Providers */,
 				EB1C2699205CE0B8003AC2A3 /* SupportingFiles */,
 				EB1C268F205CDC9A003AC2A3 /* PhotoViewerModule */,
 				EB1C266F205CDBF6003AC2A3 /* AppDelegate.swift */,
@@ -132,8 +156,6 @@
 		EB1C268F205CDC9A003AC2A3 /* PhotoViewerModule */ = {
 			isa = PBXGroup;
 			children = (
-				EB1C26A1205CEAD3003AC2A3 /* Models */,
-				EB1C269E205CEA1C003AC2A3 /* Services */,
 				EB1C26A6205CF821003AC2A3 /* Cells */,
 				EB1C2691205CDD0B003AC2A3 /* PhotoViewerView.swift */,
 				EB1C2693205CDD1C003AC2A3 /* PhotoViewerPresenter.swift */,
@@ -155,20 +177,14 @@
 			name = SupportingFiles;
 			sourceTree = "<group>";
 		};
-		EB1C269E205CEA1C003AC2A3 /* Services */ = {
+		EB1C269E205CEA1C003AC2A3 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
-				EB02BEA0206775E70072FF20 /* FlickrPaging.swift */,
-				EB02BEA2206786BB0072FF20 /* PhotoCache.swift */,
-				EB02BEA6206F6B100072FF20 /* MetaPhotoCache.swift */,
+				EB02BEAB206F82560072FF20 /* MetaPhotoProvider */,
+				EB02BEAA206F82360072FF20 /* PhotoProvider */,
 				EB1C26A9205DF384003AC2A3 /* URLFabric.swift */,
-				EB1C269F205CEA59003AC2A3 /* PhotoSearchService.swift */,
-				EB1C26AD205E1761003AC2A3 /* PhotoDownloadService.swift */,
-				EB1C26B0205E41A7003AC2A3 /* FlickrParser.swift */,
-				EB02BEA4206F55290072FF20 /* MetaPhotoProvider.swift */,
-				EB02BEA8206F7BE00072FF20 /* PhotoProvider.swift */,
 			);
-			path = Services;
+			path = Providers;
 			sourceTree = "<group>";
 		};
 		EB1C26A1205CEAD3003AC2A3 /* Models */ = {
