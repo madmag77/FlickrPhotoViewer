@@ -10,7 +10,7 @@ import UIKit
 
 protocol PhotoViewerInteractorDelegate: class {
     func errorOccured(_ error: Error)
-    func dataLoaded()
+    func dataChanged()
     func photoDownloaded(for index: Int)
 }
 
@@ -24,17 +24,14 @@ protocol PhotoViewerInteractor {
 class PhotoViewerInteractorImpl {
     weak var delegate: PhotoViewerInteractorDelegate?
     private var metaPhotoProvider: MetaPhotoProvider?
-    private var photoDownloadService: PhotoDownloadService?
-    private var photoCache: PhotoCache?
+    private var photoProvider: PhotoProvider?
     
     init(metaPhotoProvider: MetaPhotoProvider?,
-         photoDownloadService: PhotoDownloadService?,
-         photoCache: PhotoCache?) {
+         photoProvider: PhotoProvider?) {
         self.metaPhotoProvider = metaPhotoProvider
         self.metaPhotoProvider?.delegate = self
-        self.photoDownloadService = photoDownloadService
-        self.photoDownloadService?.delegate = self
-        self.photoCache = photoCache
+        self.photoProvider = photoProvider
+        self.photoProvider?.delegate = self
     }    
 }
 
@@ -45,8 +42,8 @@ extension PhotoViewerInteractorImpl: PhotoViewerInteractor {
     
     func clearSearch() {
         metaPhotoProvider?.clearSearch()
-        photoCache?.clearCache()
-        delegate?.dataLoaded()
+        photoProvider?.clearPhotos()
+        delegate?.dataChanged()
     }
 
     func itemsCount() -> Int {
@@ -58,14 +55,14 @@ extension PhotoViewerInteractorImpl: PhotoViewerInteractor {
             return (nil, nil)
         }
         
-        return (model.title, photoCache?.photo(for: model.id)())
+        return (model.title, photoProvider?.photo(for: model.id))
     }
 }
 
 extension PhotoViewerInteractorImpl: MetaPhotoProviderDelegate {
     func dataLoaded(_ models: [RemotePhotoModel]) {
-        delegate?.dataLoaded()
-        photoDownloadService?.downloadPhotos(for: models)
+        delegate?.dataChanged()
+        photoProvider?.downloadPhotos(for: models)
     }
     
     func errorOccured(_ error: Error) {
@@ -73,9 +70,8 @@ extension PhotoViewerInteractorImpl: MetaPhotoProviderDelegate {
     }
 }
 
-extension PhotoViewerInteractorImpl: PhotoDownloadServiceDelegate {
-    func justDownloadedImage(_ image: UIImage, for id: String) {
-        photoCache?.setPhoto(image, for: id)
+extension PhotoViewerInteractorImpl: PhotoProviderDelegate {
+    func photoChanged(for id: String) {
         guard let indexOfModel = metaPhotoProvider?.indexOfModel(with: id) else { return }
         delegate?.photoDownloaded(for: indexOfModel)
     }

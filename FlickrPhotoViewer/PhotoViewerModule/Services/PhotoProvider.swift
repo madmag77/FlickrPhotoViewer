@@ -7,9 +7,9 @@
 //
 
 import UIKit
-/*
+
 protocol PhotoProviderDelegate: class {
-    func justDownloadedImage(_ image: UIImage, for id: String)
+    func photoChanged(for id: String)
     func errorOccured(_ error: Error)
 }
 
@@ -18,75 +18,49 @@ protocol PhotoProvider {
     
     func downloadPhotos(for models: [RemotePhotoModel])
     func photo(for id: String) -> UIImage?
+    func clearPhotos()
 }
 
 class PhotoProviderImpl : PhotoProvider {
-    private var photoDownloadService: PhotoSearchService?
-    private var pagingHandler: FlickrPaging?
-    private var metaPhotoCache: MetaCache?
-    private var searchString: String?
-    weak var delegate: MetaPhotoProviderDelegate?
+    private var photoDownloadService: PhotoDownloadService?
+    private var photoCache: PhotoCache?
     
-    private func requestMoreModelsIfNeeded(with index: Int, outOf count: Int) {
-        guard let searchString = searchString, let page = self.pagingHandler?.pageToFetchIfAny(showing: index, outOf: count) else {
-            return
-        }
+    weak var delegate: PhotoProviderDelegate?
         
-        searchPhotos(with: searchString, page: page)
-    }
-
-    private func searchPhotos(with phrase: String, page: Int) {
-        photoSearchService?.searchPhotos(with: phrase, page: page)
-    }
-    
     private func clearAll() {
-        searchString = nil
-        metaPhotoCache?.clear()
-        pagingHandler?.clearPaging()
+        photoCache?.clearCache()
     }
     
-    init(photoSearchService: PhotoSearchService?,
-         pagingHandler: FlickrPaging?,
-         metaPhotoCache: MetaCache?) {
-        self.photoSearchService = photoSearchService
-        self.pagingHandler = pagingHandler
-        self.metaPhotoCache = metaPhotoCache
-        self.photoSearchService?.delegate = self
+    init(photoDownloadService: PhotoDownloadService?,
+         photoCache: PhotoCache?) {
+        self.photoDownloadService = photoDownloadService
+        self.photoCache = photoCache
+        self.photoDownloadService?.delegate = self
     }
 
-    func itemsCount() -> Int {
-        return metaPhotoCache?.itemsCount()() ?? 0
+    func downloadPhotos(for models: [RemotePhotoModel]) {
+        models.forEach { (model) in
+            photoDownloadService?.downloadPhoto(for: model)
+        }
     }
     
-    func item(for index: Int) -> RemotePhotoModel? {
-        requestMoreModelsIfNeeded(with: index, outOf: itemsCount())
-        
-        return metaPhotoCache?.item(for: index)()
+    func photo(for id: String) -> UIImage? {
+        return photoCache?.photo(for: id)()
     }
     
-    func startSearchingPhotos(with phrase: String) {
-        clearAll()
-        searchString = phrase
-        searchPhotos(with: phrase, page: 1)
-    }
-    
-    func clearSearch() {
-        clearAll()
-    }
-    
-    func indexOfModel(with id: String) -> Int? {
-        return metaPhotoCache?.itemIndex(for: id)()
+    func clearPhotos() {
+        photoCache?.clearCache()
     }
 }
 
-extension MetaPhotoProviderImpl: PhotoSearchServiceDelegate {
-    func photosFound(_ photoModels: [RemotePhotoModel]) {
-        metaPhotoCache?.addModels(photoModels)
-        delegate?.dataLoaded(photoModels)
+extension PhotoProviderImpl: PhotoDownloadServiceDelegate {
+    func justDownloadedImage(_ image: UIImage, for id: String) {
+        photoCache?.setPhoto(image, for: id)
+        delegate?.photoChanged(for: id)
     }
     
     func errorOccured(_ error: Error) {
         delegate?.errorOccured(error)
     }
 }
-*/
+

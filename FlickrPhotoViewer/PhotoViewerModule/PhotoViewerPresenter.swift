@@ -95,7 +95,7 @@ extension PhotoViewerPresenterImpl: PhotoViewerInteractorDelegate {
         }
     }
     
-    func dataLoaded() {
+    func dataChanged() {
         DispatchQueue.main.async {
             self.view?.showLoadedState()
             self.view?.updatePhotosView()

@@ -15,10 +15,10 @@ protocol PhotoDownloadServiceDelegate: class {
 
 protocol PhotoDownloadService {
     var delegate: PhotoDownloadServiceDelegate? {get set}
-    func downloadPhotos(for models: [RemotePhotoModel])
+    func downloadPhoto(for model: RemotePhotoModel)
 }
 
-class PhotoDownloadFlickrWebService {
+class PhotoDownloadFlickrWebService: PhotoDownloadService {
     weak var delegate: PhotoDownloadServiceDelegate?
     
     // TODO: Inject session via protocol in order to make this class testable
@@ -29,7 +29,7 @@ class PhotoDownloadFlickrWebService {
         self.urlBuilder = urlBuilder
     }
     
-    private func downloadPhoto(for model: RemotePhotoModel) {
+    public func downloadPhoto(for model: RemotePhotoModel) {
         
         let url = urlBuilder.getUrlToDownloadPhoto(farm: model.farm,
                                                    server: model.server,
@@ -56,13 +56,5 @@ class PhotoDownloadFlickrWebService {
             self.delegate?.justDownloadedImage(image, for: model.id)
             
         }.resume()
-    }
-}
-
-extension PhotoDownloadFlickrWebService: PhotoDownloadService {
-    func downloadPhotos(for models: [RemotePhotoModel]) {
-        models.forEach { (model) in
-            self.downloadPhoto(for: model)
-        }
     }
 }
