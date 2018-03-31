@@ -40,7 +40,9 @@ class PhotoProviderImpl : PhotoProvider {
 
     func downloadPhotos(for models: [RemotePhotoModel]) {
         models.forEach { (model) in
-            photoDownloadService?.downloadPhoto(for: model)
+            if photoCache?.photo(for: model.id)() == nil {
+                photoDownloadService?.downloadPhoto(for: model)
+            }
         }
     }
     
