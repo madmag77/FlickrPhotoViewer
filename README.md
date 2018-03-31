@@ -10,23 +10,24 @@ There is only one VIPER module.
 3. Status message that appears between NavigationBar and CollectionView to warn user about Loading of new photos and if error occurs.
 
 View is responsible for all actions with UI elements on screen. The only part of BussinessLogic here is a decision about update definite cell with new photo or not.
-Anyway there is a lot of boilerplate code for working with collection view. In case we can use IGListKit there will be just building of CollectionView and Adapter...
 
-**Presenter** prepares data to show on View and connects View, SearchStringHandler and DataSource in order to work together.
-
-Again in case of IGListKit we will update models in DataSource and Collection View will be updated automatically, so Presenter will be a bit smaller.
+**Presenter** prepares data to show on View and connects View, SearchStringHandler and Interactor in order to work together.
 
 **SearchStringHandler** waits some time after each symbol in order not to spam API with our requests on every input letter of search string. (Using RX we can make it with just 2 lines of code)
 
-**Interactor** is just proxing requests from presenter to PhotoSearchService. Has logic about empty search string and paging.
+**Interactor** is just proxing requests from presenter to providers.
 
-**DataStore** consists of almost all bussiness logic about storing models, giving access to store, paging (sure thing will be great to extract it to separate class) and communicating with PhotoDownloadService (we would exctract it either). If we exctract these two responsibilities (paging and asking for downloading photos) to separate classes then DataStore doesn't need to have delegate, so it will be passive and it's good.
+**MetaPhotoProvider** provides meta data about photos from cache. When PagingHandler says that it's time to ask next page from Flickr Provider asks next page from PhotoSearchService and put new data in cache. MetaPhotoCache operates in memory and represents just storage of metadata as coninuous array.
 
 **PhotoSearchService** is just simple class that makes API calls to Flickr server in order to get JSON with photo descriptions. If we need more types of requests and services we can make one more layer under this service that takes care of URLs, methods and all that common stuff.
 
  **Parser** parses received data. We can use here json modelers to map json to our models automatically - in this case we don't need Parser at all.
  
- **PhotoDownloadService** has two responsibilities (sure thing it brakes Single Responsibility principle and should be divided to two classes) 1. Memory cache for photos and 2. Downloads photos from Flickr. So, when it is asked for photo it checks cache and returns immidiatelly if found photo, if not - it requests Flickr and once it receives photo stores it to cache and notifies delegate about this event. We can make separate multilevel cache (with limited size in memory and bigger in FileSystem).
+ **PhotosProvider** provides from cache. It asks PhotoDownloadService to download photos using information from Meta photo models. When new photo comes from PhotoDownloadService Provider notifies delegate in order to show photo that was previously not available. 
+
+ **PhotoDownloadService** downloads photos from Flickr.
+ 
+ **PhotoCache** and **MetaPhotoCache** just simple in-memory caches that are cleared with each new search. We can make 2-level cache here - first level in memory with LRU and second on disk with LFU.
  
  **Builder** builds all these parts together in one Module. 
  
