@@ -11,63 +11,61 @@ import UIKit
 protocol PhotoViewerInteractorDelegate: class {
     func errorOccured(_ error: Error)
     func dataLoaded()
+    func photoDownloaded(for index: Int)
 }
 
 protocol PhotoViewerInteractor {
     func clearSearch()
     func startSearchingPhotos(with phrase: String)
-    func updatePaging(with index: Int, outOf count: Int, searchString: String)
+    func itemsCount() -> Int
+    func item(for index: Int) -> (title: String?, image: UIImage?)
 }
 
 class PhotoViewerInteractorImpl {
     weak var delegate: PhotoViewerInteractorDelegate?
-    weak var dataStore: PhotoViewerDataStoreWriter?
-    private var photoSearchService: PhotoSearchService?
-    private var pagingHandler: FlickrPaging?
-    private var photoCache: PhotoCacheWriter?
+    private var metaPhotoProvider: MetaPhotoProvider?
     private var photoDownloadService: PhotoDownloadService?
+    private var photoCache: PhotoCache?
     
-    init(photoSearchService: PhotoSearchService?,
+    init(metaPhotoProvider: MetaPhotoProvider?,
          photoDownloadService: PhotoDownloadService?,
-         pagingHandler: FlickrPaging?,
-         photoCache: PhotoCacheWriter?) {
-        self.photoSearchService = photoSearchService
-        self.photoSearchService?.delegate = self
-        self.pagingHandler = pagingHandler
+         photoCache: PhotoCache?) {
+        self.metaPhotoProvider = metaPhotoProvider
+        self.metaPhotoProvider?.delegate = self
         self.photoDownloadService = photoDownloadService
         self.photoDownloadService?.delegate = self
         self.photoCache = photoCache
-    }
-    
-    private func searchPhotos(with phrase: String, page: Int) {        
-        photoSearchService?.searchPhotos(with: phrase, page: page)
-    }
+    }    
 }
 
 extension PhotoViewerInteractorImpl: PhotoViewerInteractor {
+    func startSearchingPhotos(with phrase: String) {
+        metaPhotoProvider?.startSearchingPhotos(with: phrase)
+    }
+    
     func clearSearch() {
-        dataStore?.clearAll()
+        metaPhotoProvider?.clearSearch()
         photoCache?.clearCache()
-        pagingHandler?.clearPaging()
         delegate?.dataLoaded()
     }
 
-    func startSearchingPhotos(with phrase: String) {
-        searchPhotos(with: phrase, page: 1)
+    func itemsCount() -> Int {
+        return metaPhotoProvider?.itemsCount() ?? 0
     }
     
-    func updatePaging(with index: Int, outOf count: Int, searchString: String) {
-        if let page = self.pagingHandler?.pageToFetchIfAny(showing: index, outOf: count) {
-            searchPhotos(with: searchString, page: page)
+    func item(for index: Int) -> (title: String?, image: UIImage?) {
+        guard let model = metaPhotoProvider?.item(for: index) else {
+            return (nil, nil)
         }
+        
+        return (model.title, photoCache?.photo(for: model.id)())
     }
 }
 
-extension PhotoViewerInteractorImpl: PhotoSearchServiceDelegate {
-    func photosFound(_ photoModels: [RemotePhotoModel]) {
-        dataStore?.addModels(photoModels)
+extension PhotoViewerInteractorImpl: MetaPhotoProviderDelegate {
+    func dataLoaded(_ models: [RemotePhotoModel]) {
         delegate?.dataLoaded()
-        photoDownloadService?.downloadPhotos(for: photoModels)
+        photoDownloadService?.downloadPhotos(for: models)
     }
     
     func errorOccured(_ error: Error) {
@@ -78,5 +76,7 @@ extension PhotoViewerInteractorImpl: PhotoSearchServiceDelegate {
 extension PhotoViewerInteractorImpl: PhotoDownloadServiceDelegate {
     func justDownloadedImage(_ image: UIImage, for id: String) {
         photoCache?.setPhoto(image, for: id)
+        guard let indexOfModel = metaPhotoProvider?.indexOfModel(with: id) else { return }
+        delegate?.photoDownloaded(for: indexOfModel)
     }
 }

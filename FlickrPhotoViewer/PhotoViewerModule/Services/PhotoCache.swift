@@ -8,23 +8,13 @@
 
 import UIKit
 
-protocol PhotoCacheNotificationsDelegate: class {
-    func justGotPhoto(for id: String)
-}
-
-protocol PhotoCacheReader {
-    var delegate: PhotoCacheNotificationsDelegate? {get set}
-    func photo(for itemId: String) -> () -> UIImage? 
-}
-
-protocol PhotoCacheWriter {
+protocol PhotoCache {
+    func photo(for itemId: String) -> () -> UIImage?
     func setPhoto(_ image: UIImage, for itemId: String)
     func clearCache()
 }
 
 class PhotoCacheInMemory {
-    var delegate: PhotoCacheNotificationsDelegate?
-    
     // Sure thing it's not good to store maybe thousands of images in memory
     // so memory cache should be limited, and persistent file cache introduced
     // TODO: Make separate class - storage with limited storage in memory and big
@@ -36,7 +26,7 @@ class PhotoCacheInMemory {
     private let cacheQueue = DispatchQueue(label: "CacheQueue")
 }
 
-extension PhotoCacheInMemory: PhotoCacheReader {
+extension PhotoCacheInMemory: PhotoCache {
     func photo(for itemId: String) -> () -> UIImage? {
         return {
                 self.cacheQueue.sync {
@@ -44,16 +34,10 @@ extension PhotoCacheInMemory: PhotoCacheReader {
                 }
         }
     }
-}
 
-extension PhotoCacheInMemory: PhotoCacheWriter {
     func setPhoto(_ image: UIImage, for itemId: String) {
         cacheQueue.async {
             self.imageCache[itemId] = image
-            
-            DispatchQueue.global().async {
-                self.delegate?.justGotPhoto(for: itemId)
-            }
         }
     }
     
